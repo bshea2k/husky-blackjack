@@ -4,11 +4,20 @@ body {
     flex-direction:column;
 }
 
-.navigation {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
 .menu {
     display: flex;
 }
+
+/* navigation */
+.navigation {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: 1%;
+}
+
+.navigation__profile-icon {
+    width: 32px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
