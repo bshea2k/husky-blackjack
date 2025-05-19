@@ -4,10 +4,6 @@ body {
     flex-direction:column;
 }
 
-.menu {
-    display: flex;
-}
-
 /* navigation */
 .navigation {
     display: flex;
@@ -26,4 +22,25 @@ body {
     display: flex;
     justify-content: space-around;
     margin: 3% 0px;
+}
+
+/* menu */
+.menu {
+    display: flex;
+    flex-direction: column;
+    margin: 1% 0px;
+}
+
+.menu__main-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+    margin-bottom: 34px;
+}
+
+.menu__misc-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 34px;
 }
