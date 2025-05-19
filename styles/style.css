@@ -31,3 +31,12 @@
     font-size: 18px;
     text-shadow: 1px 1px #C0C0C0;
 }
+
+/* wordmark */
+.wordmark {
+
+}
+
+.wordmark--large {
+    width: 610px;
+}
