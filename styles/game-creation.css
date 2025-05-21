@@ -17,3 +17,17 @@
     color: white;
     text-shadow: 1px 1px 1px black;
 }
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+.game-creation-panel {
+    display: flex;
+    flex-direction: column;
+
+    background-color: #00000044;
+    width: 377px;
+    height: 377px;
+}
