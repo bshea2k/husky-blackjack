@@ -1,0 +1,19 @@
+/* game creation header */
+.game-creation-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.game-creation-header__title {
+    display: flex;
+    justify-content: center;
+
+    padding: 3%;
+}
+
+.game-creation-header__text {
+    font-size: 55px;
+
+    color: white;
+    text-shadow: 1px 1px 1px black;
+}
