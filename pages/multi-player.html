@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../styles/style.css" rel="stylesheet">
-    <link href="../styles/single-player.css" rel="stylesheet">
+    <link href="../styles/multi-player.css" rel="stylesheet">
     <link href="../styles/game-layout.css" rel="stylesheet">
-    <script src="../scripts/game-logic.js" defer></script>
-    <title>Husky Blackjack - Single Player</title>
+    <title>Husky Blackjack - Multi Player</title>
 </head>
 <body>
-    <header class="single-player-header">
+    <header class="multi-player-header">
         <nav class="non-home-banner">
             <a href="../index.html"><img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack"></a>
             <img class="non-home-banner__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
         </nav>
-        <div class="single-player-header__title">
-            <h1 class="single-player-header__text">Singleplayer</h1>
+        <div class="multi-player-header__title">
+            <h1 class="multi-player-header__text">Multiplayer</h1>
         </div>
     </header>
   <div class="game-dealer-area">
@@ -45,5 +44,14 @@
       <p class="game-score-label">Player: <span id="player-score">0</span></p>
     </div>
   </div>
+
+  <aside>
+    <div class="game-playerlist-panel">
+      <div class="game-playerlist-panel__option">
+        <p class="game-playerlist-panel__option-text">Players</p>
+      </div>
+    </div>
+  </aside>
+  
 </body>
 </html>
