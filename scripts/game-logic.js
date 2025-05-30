@@ -135,6 +135,7 @@ const players = [];
 window.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {
+    // initialize deck
     deck = await new Deck().init();
 
     // set up players
@@ -143,6 +144,10 @@ async function domLoaded() {
     const player = new Player("#player-hand", "#player-score");
     players.push(player);
 
+    await newRound();
+}
+
+async function newRound() {
     // initialize game (deal cards to dealer and player)
     await initialize();
 
@@ -181,6 +186,7 @@ function checkGameStatus() {
             statusHeader.textContent = "Player Win"
         }
 
-        
+        const newRoundButton = document.createElement("button");
     }
 }
+
