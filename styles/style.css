@@ -76,3 +76,8 @@
 .card--clubs {
     background-color: #0A73C7;
 }
+
+.card--hidden {
+    color: black;
+    background-color: black;
+}
