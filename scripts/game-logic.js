@@ -23,10 +23,51 @@ class Deck {
         return data.cards[0];
     }
 }
+
+class Player {
+    constructor() {
+        this.deck = [];
+    }
+
+    hit(card) {
+        this.deck.push(card);
+    }
+
+    // MAKE IT WHERE ACES COUNT AS 1 AND 11
+    get total() {
+        let total = 0;
+
+        for (let i = 0; i < this.deck.length; i++) {
+            if (this.deck[i].value === "ACE") {
+                total += 1;
+                continue;
+            }
+            else if (this.deck[i].value === "JACK" || this.deck[i].value === "QUEEN" || this.deck[i].value === "KING") {
+                total += 10;
+                continue;
+            }
+
+            total += parseInt(this.deck[i].value);
+        }
+
+        return total;
+    }
+}
+
 async function main() {
     const deck = await new Deck().init();
-    const card = await deck.drawCard();
+    let card = await deck.drawCard();
     console.log(card.code);
+
+    const player = new Player();
+    card = await deck.drawCard();
+    player.hit(card);
+    console.log(card.value);
+    console.log(player.total);
+    card = await deck.drawCard();
+    player.hit(card);
+    console.log(card.value);
+    console.log(player.total);
 }
 
 main();
