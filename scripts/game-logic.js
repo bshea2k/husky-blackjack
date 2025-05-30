@@ -73,6 +73,56 @@ class Player {
     }
 }
 
+class Dealer extends Player {
+    constructor() {
+        super()
+        this.hand = [];
+        this.cardZone = document.querySelector("#dealer-hand");
+        this.scoreCounter = document.querySelector("#dealer-score")
+    }
+
+    hit(card) {
+        this.hand.push(card);
+        
+        const cardElement = document.createElement("p");
+        cardElement.textContent = `${card.suit} ${card.value}`;
+        let suitClass = `card--${card.suit}`;
+        cardElement.classList.add(suitClass.toLowerCase());
+
+        if (this.hand.length == 1) {
+            cardElement.classList.add("card--hidden");
+        }
+
+        this.cardZone.appendChild(cardElement);
+
+        this.scoreCounter.textContent = this.total;
+    }
+
+    get hiddenTotal() {
+        let lowTotal = 0;
+        let highTotal = 0;
+
+        for (let i = 1; i < this.hand.length; i++) {
+            if (this.hand[i].value === "ACE") {
+                lowTotal += 1;
+                highTotal += 11;
+                continue;
+            }
+            else if (this.hand[i].value === "JACK" || this.hand[i].value === "QUEEN" || this.hand[i].value === "KING") {
+                lowTotal += 10;
+                highTotal += 10;
+                continue;
+            }
+
+            lowTotal += parseInt(this.hand[i].value);
+            highTotal += parseInt(this.hand[i].value);
+        }
+
+        if (highTotal > 21) return lowTotal;
+        else return highTotal;
+    }
+}
+
 let deck;
 const players = [];
 
@@ -81,10 +131,12 @@ window.addEventListener("DOMContentLoaded", domLoaded);
 async function domLoaded() {
     deck = await new Deck().init();
 
-    const dealer = new Player("#dealer-hand", "#dealer-score");
+    // set up players
+    const dealer = new Dealer();
     players.push(dealer);
     const player = new Player("#player-hand", "#player-score");
     players.push(player);
+
     // initialize game (deal cards to dealer and player)
     await initialize();
 
