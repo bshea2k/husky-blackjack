@@ -138,6 +138,9 @@ class Dealer extends Player {
 let deck;
 const players = [];
 
+const hitButton = document.querySelector("#hit-btn");
+const standButton = document.querySelector("#stand-btn");
+
 window.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {
@@ -154,6 +157,9 @@ async function domLoaded() {
 }
 
 async function newRound() {
+    // clear data from previous round
+    reset();
+
     // initialize game (deal cards to dealer and player)
     await initialize();
 
@@ -161,6 +167,20 @@ async function newRound() {
     checkGameStatus();
 
     // let player hit or stand
+}
+
+function reset() {
+    // make the popup screen denoting new round go away
+    const testingDiv = document.querySelector(".testing");
+    testingDiv.innerHTML = "";
+
+    // make the hit and stand buttons clickable again
+    hitButton.disabled = false;
+    standButton.disabled = false;
+
+    // clear dealer and players hands
+    players[0].clearHand();
+    players[1].clearHand();
 }
 
 async function initialize() {
@@ -177,10 +197,16 @@ async function dealCard(user) {
     user.hit(card);
 }
 
+/*
+
+*/
 function checkGameStatus() {
     const dealerTotal = players[0].total;
     const playerTotal = players[1].total;
-    const statusHeader = document.querySelector(".testing__status")
+    const testingDiv = document.querySelector(".testing") //temp
+    const statusHeader = document.createElement("h2"); //temp
+    testingDiv.append(statusHeader); //temp
+
     if (dealerTotal === 21 || playerTotal === 21) {
         if (dealerTotal === 21) {
             if (playerTotal === 21) {
@@ -192,7 +218,12 @@ function checkGameStatus() {
             statusHeader.textContent = "Player Win"
         }
 
-        const newRoundButton = document.createElement("button");
+        const newRoundButton = document.createElement("button"); //temp
+        newRoundButton.classList.add("testing__button"); //temp
+        newRoundButton.textContent = "New round"; //temp
+        testingDiv.appendChild(newRoundButton); //temp
+
+        newRoundButton.addEventListener("click", newRound);
     }
 }
 
