@@ -25,9 +25,10 @@ class Deck {
 }
 
 class Player {
-    constructor(cardZone) {
+    constructor(cardZone, scoreCounter) {
         this.hand = [];
         this.cardZone = document.querySelector(`${cardZone}`);
+        this.scoreCounter = document.querySelector(`${scoreCounter}`)
     }
 
     hit(card) {
@@ -36,6 +37,8 @@ class Player {
         const cardElement = document.createElement("p");
         cardElement.textContent = `${card.suit} ${card.value}`;
         this.cardZone.appendChild(cardElement);
+
+        this.scoreCounter.textContent = this.total;
     }
 
     // MAKE IT WHERE ACES COUNT AS 1 AND 11
@@ -73,9 +76,9 @@ window.addEventListener("DOMContentLoaded", domLoaded);
 async function domLoaded() {
     deck = await new Deck().init();
 
-    const dealer = new Player("#dealer-hand");
+    const dealer = new Player("#dealer-hand", "#dealer-score");
     players.push(dealer);
-    const player = new Player("#player-hand");
+    const player = new Player("#player-hand", "#player-score");
     players.push(player);
     // initialize game (deal cards to dealer and player)
     await initialize();
