@@ -127,6 +127,12 @@ class Dealer extends Player {
         if (highTotal > 21) return lowTotal;
         else return highTotal;
     }
+
+    reveal() {
+        const hiddenCard = this.cardZone.firstElementChild;
+        hiddenCard.classList.remove("card--hidden");
+        this.scoreCounter.textContent = this.total;
+    }
 }
 
 let deck;
