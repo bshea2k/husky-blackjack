@@ -1,0 +1,36 @@
+  
+.multi-player-header {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+  
+.multi-player-header__title {
+    display: flex;
+    justify-content: center;
+    padding: 3%;
+}
+
+.multi-player-header__text {
+    font-size: 55px;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    margin: 0;
+}
+
+.game-playerlist-panel__option-text {
+    display: flex;
+    justify-content: center;
+    background-color: #00000044;
+}
+ 
+.game-playerlist-panel {
+    background-color: #00000044;
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    padding: 15px;
+    position: relative;
+    margin-left: 30px;
+}
