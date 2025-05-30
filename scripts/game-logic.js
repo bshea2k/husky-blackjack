@@ -26,31 +26,37 @@ class Deck {
 
 class Player {
     constructor() {
-        this.deck = [];
+        this.hand = [];
     }
 
     hit(card) {
-        this.deck.push(card);
+        this.hand.push(card);
     }
 
     // MAKE IT WHERE ACES COUNT AS 1 AND 11
+    // returns the value of current hand
     get total() {
         let total = 0;
 
-        for (let i = 0; i < this.deck.length; i++) {
-            if (this.deck[i].value === "ACE") {
+        for (let i = 0; i < this.hand.length; i++) {
+            if (this.hand[i].value === "ACE") {
                 total += 1;
                 continue;
             }
-            else if (this.deck[i].value === "JACK" || this.deck[i].value === "QUEEN" || this.deck[i].value === "KING") {
+            else if (this.hand[i].value === "JACK" || this.hand[i].value === "QUEEN" || this.hand[i].value === "KING") {
                 total += 10;
                 continue;
             }
 
-            total += parseInt(this.deck[i].value);
+            total += parseInt(this.hand[i].value);
         }
 
         return total;
+    }
+
+    // returns the card at specified index of players hand
+    getCard(index) {
+        return this.hand[index];
     }
 }
 
@@ -68,6 +74,9 @@ async function main() {
     player.hit(card);
     console.log(card.value);
     console.log(player.total);
+
+    card = player.getCard(0);
+    console.log(`Result of getCard(0) is ${card.value}`);
 }
 
 main();
