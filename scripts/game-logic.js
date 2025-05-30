@@ -159,6 +159,17 @@ async function domLoaded() {
         checkGameStatus();
     });
 
+    standButton.addEventListener("click", async () => {
+        players[0].reveal();
+
+        while (players[0].total < 17) {
+            await dealCard(players[0]);
+            players[0].reveal();
+        }
+
+        checkWinner();
+    });
+
     await newRound();
 }
 
@@ -172,7 +183,8 @@ async function newRound() {
     // check to see if player or dealer have blackjacks
     checkGameStatus();
 
-    // let player hit or stand
+    hitButton.disabled = false;
+    hitButton.disabled = false;
 }
 
 function reset() {
@@ -204,7 +216,8 @@ async function dealCard(user) {
 }
 
 /*
-
+make it less spaghetti code
+make the new round screen a pop up with blacked out background
 */
 function checkGameStatus() {
     const dealerTotal = players[0].total;
@@ -215,6 +228,8 @@ function checkGameStatus() {
 
     if (dealerTotal === 21 || playerTotal === 21 || playerTotal > 21 || dealerTotal > 21) {
         if (dealerTotal === 21) {
+            players[0].reveal();
+
             if (playerTotal === 21) {
                 statusHeader.textContent = "Push";
             } else {
@@ -225,9 +240,11 @@ function checkGameStatus() {
         }
 
         if (playerTotal > 21) {
+            players[0].reveal();
             statusHeader.textContent = "Player Bust";
         }
-        if (dealerTotal > 12) {
+        if (dealerTotal > 21) {
+            players[0].reveal();
             statusHeader.textContent = "Dealer Bust";
         }
 
@@ -243,3 +260,30 @@ function checkGameStatus() {
     }
 }
 
+function checkWinner() {
+    const dealerTotal = players[0].total;
+    const playerTotal = players[1].total;
+    const testingDiv = document.querySelector(".testing") //temp
+    const statusHeader = document.createElement("h2"); //temp
+    testingDiv.append(statusHeader); //temp
+
+    if (dealerTotal > 21) {
+        statusHeader.textContent = "Dealer Bust";
+    } else if (dealerTotal > playerTotal) {
+        statusHeader.textContent = "Dealer Win";
+    } else if (dealerTotal < playerTotal) {
+        statusHeader.textContent = "Player win";
+    } else {
+        statusHeader.textContent = "Push";
+    }
+
+    const newRoundButton = document.createElement("button"); //temp
+    newRoundButton.classList.add("testing__button"); //temp
+    newRoundButton.textContent = "New round"; //temp
+    testingDiv.appendChild(newRoundButton); //temp
+
+    hitButton.disabled = true;
+    standButton.disabled = true;
+
+    newRoundButton.addEventListener("click", newRound);
+}
