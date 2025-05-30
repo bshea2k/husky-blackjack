@@ -71,6 +71,12 @@ class Player {
     getCard(index) {
         return this.hand[index];
     }
+
+    clearHand() {
+        this.hand.length = 0;
+        this.cardZone.innerHTML = "";
+        this.scoreCounter.textContent = 0;
+    }
 }
 
 class Dealer extends Player {
