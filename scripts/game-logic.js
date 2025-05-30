@@ -95,7 +95,7 @@ class Dealer extends Player {
 
         this.cardZone.appendChild(cardElement);
 
-        this.scoreCounter.textContent = this.total;
+        this.scoreCounter.textContent = this.hiddenTotal + "?";
     }
 
     get hiddenTotal() {
