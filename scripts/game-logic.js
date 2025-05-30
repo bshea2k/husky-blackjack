@@ -175,7 +175,7 @@ async function domLoaded() {
 
 async function newRound() {
     // clear data from previous round
-    reset();
+    await reset();
 
     // initialize game (deal cards to dealer and player)
     await initialize();
@@ -187,7 +187,7 @@ async function newRound() {
     hitButton.disabled = false;
 }
 
-function reset() {
+async function reset() {
     // make the popup screen denoting new round go away
     const testingDiv = document.querySelector(".testing");
     testingDiv.innerHTML = "";
@@ -196,9 +196,10 @@ function reset() {
     hitButton.disabled = false;
     standButton.disabled = false;
 
-    // clear dealer and players hands
+    // clear dealer and players hands and shuffle deck
     players[0].clearHand();
     players[1].clearHand();
+    await deck.shuffle();
 }
 
 async function initialize() {
