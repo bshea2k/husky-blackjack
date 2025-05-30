@@ -224,7 +224,7 @@ function checkGameStatus() {
         testingDiv.appendChild(newRoundButton); //temp
 
         hitButton.disabled = true;
-        hitButton.disabled = true;
+        standButton.disabled = true;
 
         newRoundButton.addEventListener("click", newRound);
     }
