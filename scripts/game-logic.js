@@ -29,8 +29,11 @@ class Player {
         this.hand = [];
     }
 
-    hit(card) {
-        this.hand.push(card);
+    async hit(deckId) {
+        const res = await fetch (`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`);
+        const data = await res.json();
+
+        this.hand.push(data.cards[0]);
     }
 
     // MAKE IT WHERE ACES COUNT AS 1 AND 11
@@ -60,23 +63,23 @@ class Player {
     }
 }
 
+class Game {
+    constructor() {
+        this.deck = null;
+    }
+
+    async init() {
+        const deck = await new Deck().init();
+        this.deck = deck;
+    }
+
+    async playRound() {
+        
+    }
+}
+
 async function main() {
-    const deck = await new Deck().init();
-    let card = await deck.drawCard();
-    console.log(card.code);
-
-    const player = new Player();
-    card = await deck.drawCard();
-    player.hit(card);
-    console.log(card.value);
-    console.log(player.total);
-    card = await deck.drawCard();
-    player.hit(card);
-    console.log(card.value);
-    console.log(player.total);
-
-    card = player.getCard(0);
-    console.log(`Result of getCard(0) is ${card.value}`);
+    
 }
 
 main();
