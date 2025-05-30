@@ -36,6 +36,8 @@ class Player {
         
         const cardElement = document.createElement("p");
         cardElement.textContent = `${card.suit} ${card.value}`;
+        let suitClass = `card--${card.suit}`;
+        cardElement.classList.add(suitClass.toLowerCase());
         this.cardZone.appendChild(cardElement);
 
         this.scoreCounter.textContent = this.total;
@@ -89,7 +91,7 @@ async function domLoaded() {
 }
 
 async function initialize() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
         for (let j = 0; j < players.length; j++) {
             await dealCard(players[j]);
         }
