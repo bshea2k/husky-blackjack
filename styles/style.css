@@ -58,3 +58,20 @@
     height: 34px;
     margin-left: auto;
 }
+
+/* card styling */
+.card--heart {
+    color: #DB0B01
+}
+
+.card--diamond {
+    color:#B46F01
+}
+
+.card--spade {
+    color: black;
+}
+
+.card--club {
+    color: #0A73C7;
+}
