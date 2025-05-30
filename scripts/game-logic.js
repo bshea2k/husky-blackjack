@@ -59,58 +59,16 @@ class Player {
         return this.hand[index];
     }
 }
-/*
-class Game {
-    constructor() {
-        this.deck = null;
-    }
 
-    async init() {
-        const deck = await new Deck().init();
-        this.deck = deck;
-    }
-
-    async playRound() {
-        
-    }
-} */
+let deck;
 
 window.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {
-    const deck = await new Deck().init();
+    deck = await new Deck().init();
     const dealer = new Player();
     const player = new Player();
     // initialize game (deal cards to dealer and player)
-    await initialize(deck, dealer, player);
+    
 
-}
-
-async function initialize(deck, dealer, player) {
-    const dealerHand = document.querySelector("#dealer-hand");
-    const playerHand = document.querySelector("#player-hand");
-
-    const dealerCard1Element = document.createElement("p");
-    const dealerCard1 = await deck.drawCard();
-    dealer.hit(dealerCard1);
-    dealerCard1Element.textContent = `${dealerCard1.suit} ${dealerCard1.value}`;
-    dealerHand.appendChild(dealerCard1Element);
-
-    const dealerCard2Element = document.createElement("p");
-    const dealerCard2 = await deck.drawCard();
-    dealer.hit(dealerCard2);
-    dealerCard2Element.textContent = `${dealerCard2.suit} ${dealerCard2.value}`;
-    dealerHand.appendChild(dealerCard2Element);
-
-    const playerCard1Element = document.createElement("p");
-    const playerCard1 = await deck.drawCard();
-    player.hit(playerCard1);
-    playerCard1Element.textContent = `${playerCard1.suit} ${playerCard1.value}`;
-    playerHand.appendChild(playerCard1Element);
-
-    const playerCard2Element = document.createElement("p");
-    const playerCard2 = await deck.drawCard();
-    player.hit(playerCard2);
-    playerCard2Element.textContent = `${playerCard2.suit} ${playerCard2.value}`;
-    playerHand.appendChild(playerCard2Element);
 }
