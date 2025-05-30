@@ -60,18 +60,19 @@
 }
 
 /* card styling */
-.card--heart {
-    color: #DB0B01
+.card--hearts {
+    background-color: #DB0B01;
 }
 
-.card--diamond {
-    color:#B46F01
+.card--diamonds {
+    background-color:#B46F01;
 }
 
-.card--spade {
-    color: black;
+.card--spades {
+    background-color: black;
+    color: white;
 }
 
-.card--club {
-    color: #0A73C7;
+.card--clubs {
+    background-color: #0A73C7;
 }
