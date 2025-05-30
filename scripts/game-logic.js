@@ -146,6 +146,10 @@ async function domLoaded() {
     // initialize game (deal cards to dealer and player)
     await initialize();
 
+    // check to see if player or dealer have blackjacks
+    checkGameStatus();
+
+    // let player hit or stand
 }
 
 async function initialize() {
@@ -160,4 +164,23 @@ async function dealCard(user) {
     const card = await deck.drawCard();
 
     user.hit(card);
+}
+
+function checkGameStatus() {
+    const dealerTotal = players[0].total;
+    const playerTotal = players[1].total;
+    const statusHeader = document.querySelector(".testing__status")
+    if (dealerTotal === 21 || playerTotal === 21) {
+        if (dealerTotal === 21) {
+            if (playerTotal === 21) {
+                statusHeader.textContent = "Push";
+            } else {
+                statusHeader.textContent = "Dealer Win"
+            }
+        } else if (playerTotal === 21) {
+            statusHeader.textContent = "Player Win"
+        }
+
+        
+    }
 }
