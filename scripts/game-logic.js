@@ -153,6 +153,12 @@ async function domLoaded() {
     const player = new Player("#player-hand", "#player-score");
     players.push(player);
 
+    // set up play buttons
+    hitButton.addEventListener("click", async () => {
+        await dealCard(players[1]);
+        checkGameStatus();
+    });
+
     await newRound();
 }
 
@@ -207,7 +213,7 @@ function checkGameStatus() {
     const statusHeader = document.createElement("h2"); //temp
     testingDiv.append(statusHeader); //temp
 
-    if (dealerTotal === 21 || playerTotal === 21) {
+    if (dealerTotal === 21 || playerTotal === 21 || playerTotal > 21 || dealerTotal > 21) {
         if (dealerTotal === 21) {
             if (playerTotal === 21) {
                 statusHeader.textContent = "Push";
@@ -216,6 +222,13 @@ function checkGameStatus() {
             }
         } else if (playerTotal === 21) {
             statusHeader.textContent = "Player Win"
+        }
+
+        if (playerTotal > 21) {
+            statusHeader.textContent = "Player Bust";
+        }
+        if (dealerTotal > 12) {
+            statusHeader.textContent = "Dealer Bust";
         }
 
         const newRoundButton = document.createElement("button"); //temp
