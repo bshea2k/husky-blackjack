@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../styles/style.css" rel="stylesheet">
+    <link href="../styles/single-player.css" rel="stylesheet">
+    <title>Husky Blackjack - Single Player</title>
+</head>
+<body>
+    <header class="single-player-header">
+        <nav class="non-home-banner">
+            <a href="../index.html"><img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack"></a>
+            <img class="non-home-banner__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
+        </nav>
+        <div class="single-player-header__title">
+            <h1 class="single-player-header__text">Singleplayer</h1>
+        </div>
+    </header>
+  <div class="game-dealer-area">
+    <p class="game-score-label">Dealer: <span id="dealer-score">0</span></p>
+    <div class="game-card-row" id="dealer-hand">  <!-- Possible place for Deck of Cards API-->
+    </div>
+  </div>
+
+
+  <div class="game-controls">
+    <button class="game-btn" id="hit-btn">
+      Hit <img src="../images/hit-btn-icon.png" alt="paw icon" class="btn-icon" />
+    </button>
+    <button class="game-btn" id="double-btn">
+      Double <img src="../images/double-btn-icon.png" alt="coin icon" class="btn-icon" />
+    </button>
+    <button class="game-btn" id="stand-btn">
+      Stand <img src="../images/stand-btn-icon.png" alt="up arrow icon" class="btn-icon" />
+    </button>
+  </div>
+
+  <div class="game-player-area">
+    <div class="game-player-hand-area">
+      <div class="game-card-row" id="player-hand">  <!-- Possible place for Deck of Cards API-->
+      </div>
+      <p class="game-score-label">Player: <span id="player-score">0</span></p>
+    </div>
+  </div>
+</body>
+</html>
