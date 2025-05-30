@@ -41,25 +41,28 @@ class Player {
         this.scoreCounter.textContent = this.total;
     }
 
-    // MAKE IT WHERE ACES COUNT AS 1 AND 11
-    // returns the value of current hand
     get total() {
-        let total = 0;
+        let lowTotal = 0;
+        let highTotal = 0;
 
         for (let i = 0; i < this.hand.length; i++) {
             if (this.hand[i].value === "ACE") {
-                total += 1;
+                lowTotal += 1;
+                highTotal += 11;
                 continue;
             }
             else if (this.hand[i].value === "JACK" || this.hand[i].value === "QUEEN" || this.hand[i].value === "KING") {
-                total += 10;
+                lowTotal += 10;
+                highTotal += 10;
                 continue;
             }
 
-            total += parseInt(this.hand[i].value);
+            lowTotal += parseInt(this.hand[i].value);
+            highTotal += parseInt(this.hand[i].value);
         }
 
-        return total;
+        if (highTotal > 21) return lowTotal;
+        else return highTotal;
     }
 
     // returns the card at specified index of players hand
@@ -86,7 +89,7 @@ async function domLoaded() {
 }
 
 async function initialize() {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
         for (let j = 0; j < players.length; j++) {
             await dealCard(players[j]);
         }
