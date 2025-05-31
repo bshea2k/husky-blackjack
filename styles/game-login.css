@@ -1,0 +1,19 @@
+#google-signin {
+    width: 250px;                 
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px #999;
+    text-align: center;
+    margin: 0 auto;            
+    display: block;   
+  }
+  
+  #google-signin:hover {
+    filter: brightness(0.9);
+  }
