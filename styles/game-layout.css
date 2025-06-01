@@ -39,6 +39,15 @@
     filter: brightness(0.9);
 }
   
+  .game-btn--disabled {
+    background-color: #B29DDC;
+    box-shadow: 0 4px #C1B3E0;
+  }
+
+  .game-btn--disabled:hover {
+    filter: brightness(1);
+  }
+
   .btn-icon {
     height: 20px;
     background-color: white;
