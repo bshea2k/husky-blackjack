@@ -34,10 +34,7 @@ class Player {
     hit(card) {
         this.hand.push(card);
         
-        const cardElement = document.createElement("p");
-        cardElement.textContent = `${card.suit} ${card.value}`;
-        let suitClass = `card--${card.suit}`;
-        cardElement.classList.add(suitClass.toLowerCase());
+        const cardElement = makeCardElement(card.value, card.suit.toLowerCase());
         this.cardZone.appendChild(cardElement);
 
         this.scoreCounter.textContent = this.total;
@@ -90,10 +87,7 @@ class Dealer extends Player {
     hit(card) {
         this.hand.push(card);
         
-        const cardElement = document.createElement("p");
-        cardElement.textContent = `${card.suit} ${card.value}`;
-        let suitClass = `card--${card.suit}`;
-        cardElement.classList.add(suitClass.toLowerCase());
+        const cardElement = makeCardElement(card.value, card.suit.toLowerCase());
 
         if (this.hand.length == 1) {
             cardElement.classList.add("card--hidden");
@@ -290,6 +284,7 @@ function checkWinner() {
 }
 
 function makeCardElement(number, suit) {
+    // create elements & assign classes
     const cardBlock = document.createElement("div");
     cardBlock.classList.add("card");
     cardBlock.classList.add(`card--${suit}`);
@@ -300,22 +295,38 @@ function makeCardElement(number, suit) {
     const cardBottomSection = document.createElement("div");
     cardBottomSection.classList.add("card__bottom-section");
 
-    const cardNumber = document.createElement("span");
-    cardNumber.classList.add("card__number");
-    cardNumber.textContent = number;
+    const topNumber = document.createElement("span");
+    topNumber.classList.add("card__number");
 
-    const cardSuit = document.createElement("span");
-    cardNumber.classList.add("card__suit");
-    if (suit === "hearts") cardSuit.textContent = "&#9829;";
-    else if (suit === "diamonds") cardSuit.textContent = "&#9830;";
-    else if (suit === "spades") cardSuit.textContent = "&#9824;";
-    else cardSuit.textContent = "&#9827;";
+    const topSuit = document.createElement("span");
+    topSuit.classList.add("card__suit");
 
-    cardTopSection.appendChild(cardNumber);
-    cardTopSection.appendChild(cardSuit);
-    cardBottomSection.appendChild(cardNumber);
-    cardBottomSection.appendChild(cardSuit);
+    const bottomNumber = document.createElement("span");
+    bottomNumber.classList.add("card__number");
 
+    const bottomSuit = document.createElement("span");
+    bottomSuit.classList.add("card__suit");
+
+    // add content to elements
+    let suitCode;
+
+    if (suit === "hearts") suitCode = "&hearts;";
+    else if (suit === "diamonds") suitCode = "&diams;";
+    else if (suit === "clubs") suitCode = "&clubs;";
+    else suitCode = "&#9824;";
+
+    topNumber.textContent = number.slice(0, 1);
+    if (number === 10) topNumber.textContent = 10;
+    topSuit.innerHTML = suitCode;
+    bottomNumber.textContent = number.slice(0, 1);
+    if (number === 10) bottomNumber.textContent = 10;
+    bottomSuit.innerHTML = suitCode;
+
+    // append elements
+    cardTopSection.appendChild(topNumber);
+    cardTopSection.appendChild(topSuit);
+    cardBottomSection.appendChild(bottomNumber);
+    cardBottomSection.appendChild(bottomSuit);
     cardBlock.appendChild(cardTopSection);
     cardBlock.appendChild(cardBottomSection);
 
