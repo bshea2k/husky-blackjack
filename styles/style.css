@@ -60,21 +60,61 @@
 }
 
 /* card styling */
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 89px;
+    height: 144px;
+
+    padding: 8px;
+
+    background-color: #FAF9F6;
+    border-radius: 8px;
+}
+
+.card__top-section {
+    display: flex;
+    flex-direction: column;
+
+    background-color: inherit;
+}
+
+.card__bottom-section {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: auto;
+
+    background-color: inherit;
+    transform: rotate(180deg);
+}
+
+.card__number {
+    background-color: inherit;
+    font-size: 21px;
+}
+
+.card__suit {
+    background-color: inherit;
+    font-size: 21px;
+}
+
 .card--hearts {
-    background-color: #DB0B01;
+    color: red;
 }
 
 .card--diamonds {
-    background-color:#B46F01;
+    color:#B46F01;
 }
 
 .card--spades {
-    background-color: black;
-    color: white;
+    color: black;
 }
 
 .card--clubs {
-    background-color: #0A73C7;
+    color: #0A73C7;
 }
 
 .card--hidden {
