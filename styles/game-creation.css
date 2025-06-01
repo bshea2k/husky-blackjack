@@ -23,11 +23,56 @@ main {
     justify-content: center;
 }
 
+/* game creation panel */
 .game-creation-panel {
     display: flex;
     flex-direction: column;
+    gap: 8px;
 
-    background-color: #00000044;
     width: 377px;
     height: 377px;
+    padding: 21px;
+
+    background-color: #076144;
+    border-radius: 13px;
+}
+
+.game-creation-panel__option {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    background-color: inherit;
+}
+
+.game-creation-panel__label {
+    color: white;
+    background-color: inherit;
+}
+
+.game-creation-panel__select {
+    width: 144px;
+
+    background-color: white;
+}
+
+.game-creation-panel__selection {
+    background-color: white;
+}
+
+.game-creation-panel__submit {
+    margin-top: auto;
+    background-color: #4B2991;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px #321c60;
+    cursor: pointer;
+}
+
+.game-creation-panel__submit:hover {
+    filter: brightness(0.9);
 }

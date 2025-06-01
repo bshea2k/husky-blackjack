@@ -18,11 +18,30 @@
         </div>
     </header>
     <main>
-        <div class="game-creation-panel">
-            <div class="game-creation-panel__option">
-                <p class="game-creation-panel__option-text">Players</p>
+        <form action="/submit" method="POST">
+            <div class="game-creation-panel">
+                <div class="game-creation-panel__option">
+                    <label for="players" class="game-creation-panel__label">Players </label>
+                    <select name="players" id="players" class="game-creation-panel__select">
+                        <option class="game-creation-panel__selection" value="2">2</option>
+                        <option class="game-creation-panel__selection" value="3">3</option>
+                        <option class="game-creation-panel__selection" value="4">4</option>
+                        <option class="game-creation-panel__selection" value="5">5</option>
+                    </select>
+                </div>
+                <div class="game-creation-panel__option">
+                    <label for="hands" class="game-creation-panel__label">Hands</label>
+                    <select name="hands" id="hands" class="game-creation-panel__select">
+                        <option class="game-creation-panel__selection" value="5">5</option>
+                        <option class="game-creation-panel__selection" value="10">10</option>
+                        <option class="game-creation-panel__selection" value="15">15</option>
+                        <option class="game-creation-panel__selection" value="20">20</option>
+                        <option class="game-creation-panel__selection" value="25">25</option>
+                    </select>
+                </div>
+                <button class="game-creation-panel__submit" type="submit">Create</button>
             </div>
-        </div>
+        </form>
     </main>
 </body>
 </html>
