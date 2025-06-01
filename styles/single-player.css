@@ -18,3 +18,15 @@
     text-shadow: 1px 1px 1px black;
     margin: 0;
 }
+
+#dealer-hand {
+    display:flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+#player-hand {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
