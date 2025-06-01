@@ -348,9 +348,13 @@ function delay(time) {
 function disablePlayButtons() {
     hitButton.disabled = true;
     standButton.disabled = true;
+    hitButton.classList.add("game-btn--disabled");
+    standButton.classList.add("game-btn--disabled");
 }
 
 function enablePlayButtons() {
     hitButton.disabled = false;
     standButton.disabled = false;
+    hitButton.classList.remove("game-btn--disabled");
+    standButton.classList.remove("game-btn--disabled");
 }
