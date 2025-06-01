@@ -178,6 +178,10 @@ async function newRound() {
     // clear data from previous round
     await resetHands();
 
+    // remove popup
+    const popup = document.querySelector(".round-end-singleplayer");
+    popup.classList.add("round-end-singleplayer--hidden");
+
     // initialize game (deal cards to dealer and player)
     await initialize();
 
@@ -188,11 +192,6 @@ async function newRound() {
 }
 
 async function resetHands() {
-    // make the popup screen denoting new round go away
-    const testingDiv = document.querySelector(".testing");
-    testingDiv.innerHTML = "";
-
-    // clear dealer and players hands and shuffle deck
     players[0].clearHand();
     players[1].clearHand();
     await deck.shuffle();
@@ -213,48 +212,26 @@ async function dealCard(user) {
     user.hit(card)
 }
 
-/*
-make it less spaghetti code
-make the new round screen a pop up with blacked out background
-*/
 // return true if game over, false otherwise
 function checkGameStatus() {
     const dealerTotal = players[0].total;
     const playerTotal = players[1].total;
-    const testingDiv = document.querySelector(".testing") //temp
-    const statusHeader = document.createElement("h2"); //temp
-    testingDiv.append(statusHeader); //temp
-
-    if (dealerTotal === 21 || playerTotal === 21 || playerTotal > 21 || dealerTotal > 21) {
+    
+    if (dealerTotal === 21 || playerTotal === 21 || dealerTotal > 21 || playerTotal > 21)  {
         if (dealerTotal === 21) {
-            players[0].reveal();
-
             if (playerTotal === 21) {
-                statusHeader.textContent = "Push";
+                roundEndPopup("Push");
             } else {
-                statusHeader.textContent = "Dealer Win"
+                roundEndPopup("Dealer Blackjack");
             }
         } else if (playerTotal === 21) {
-            statusHeader.textContent = "Player Win"
+            roundEndPopup("Player Blackjack");
+        } else if (dealerTotal > 21) {
+            roundEndPopup("Dealer Bust");
+        } else {
+            roundEndPopup("Player Bust");
         }
 
-        if (playerTotal > 21) {
-            players[0].reveal();
-            statusHeader.textContent = "Player Bust";
-        }
-        if (dealerTotal > 21) {
-            players[0].reveal();
-            statusHeader.textContent = "Dealer Bust";
-        }
-
-        const newRoundButton = document.createElement("button"); //temp
-        newRoundButton.classList.add("testing__button"); //temp
-        newRoundButton.textContent = "New round"; //temp
-        testingDiv.appendChild(newRoundButton); //temp
-
-        disablePlayButtons();
-
-        newRoundButton.addEventListener("click", newRound);
         return true;
     }
 
@@ -264,28 +241,18 @@ function checkGameStatus() {
 function checkWinner() {
     const dealerTotal = players[0].total;
     const playerTotal = players[1].total;
-    const testingDiv = document.querySelector(".testing") //temp
-    const statusHeader = document.createElement("h2"); //temp
-    testingDiv.append(statusHeader); //temp
 
     if (dealerTotal > 21) {
-        statusHeader.textContent = "Dealer Bust";
+        roundEndPopup("Dealer Bust");
     } else if (dealerTotal > playerTotal) {
-        statusHeader.textContent = "Dealer Win";
+        roundEndPopup("Dealer Win");
     } else if (dealerTotal < playerTotal) {
-        statusHeader.textContent = "Player win";
+        roundEndPopup("Player Win");
     } else {
-        statusHeader.textContent = "Push";
+        roundEndPopup("Push");
     }
 
-    const newRoundButton = document.createElement("button"); //temp
-    newRoundButton.classList.add("testing__button"); //temp
-    newRoundButton.textContent = "New round"; //temp
-    testingDiv.appendChild(newRoundButton); //temp
-
-    disablePlayButtons();
-
-    newRoundButton.addEventListener("click", newRound);
+    //disablePlayButtons();
 }
 
 function makeCardElement(number, suit) {
@@ -354,4 +321,15 @@ function enablePlayButtons() {
     standButton.disabled = false;
     hitButton.classList.remove("game-btn--disabled");
     standButton.classList.remove("game-btn--disabled");
+}
+
+function roundEndPopup(roundResult) {
+    const popup = document.querySelector(".round-end-singleplayer");
+    const message = document.querySelector(".round-end-singleplayer__message");
+    const nextRoundButton = document.querySelector("#next-round-btn");
+
+    message.textContent = roundResult;
+    nextRoundButton.addEventListener("click", newRound);
+
+    popup.classList.remove("round-end-singleplayer--hidden")
 }
