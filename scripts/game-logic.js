@@ -288,3 +288,36 @@ function checkWinner() {
 
     newRoundButton.addEventListener("click", newRound);
 }
+
+function makeCardElement(number, suit) {
+    const cardBlock = document.createElement("div");
+    cardBlock.classList.add("card");
+    cardBlock.classList.add(`card--${suit}`);
+
+    const cardTopSection = document.createElement("div");
+    cardTopSection.classList.add("card__top-section");
+
+    const cardBottomSection = document.createElement("div");
+    cardBottomSection.classList.add("card__bottom-section");
+
+    const cardNumber = document.createElement("span");
+    cardNumber.classList.add("card__number");
+    cardNumber.textContent = number;
+
+    const cardSuit = document.createElement("span");
+    cardNumber.classList.add("card__suit");
+    if (suit === "hearts") cardSuit.textContent = "&#9829;";
+    else if (suit === "diamonds") cardSuit.textContent = "&#9830;";
+    else if (suit === "spades") cardSuit.textContent = "&#9824;";
+    else cardSuit.textContent = "&#9827;";
+
+    cardTopSection.appendChild(cardNumber);
+    cardTopSection.appendChild(cardSuit);
+    cardBottomSection.appendChild(cardNumber);
+    cardBottomSection.appendChild(cardSuit);
+
+    cardBlock.appendChild(cardTopSection);
+    cardBlock.appendChild(cardBottomSection);
+
+    return cardBlock;
+}
