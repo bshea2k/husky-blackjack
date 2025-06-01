@@ -129,6 +129,7 @@ class Dealer extends Player {
     }
 }
 
+const HIT_TIME = 250;
 let deck;
 const players = [];
 
@@ -149,14 +150,20 @@ async function domLoaded() {
 
     // set up play buttons
     hitButton.addEventListener("click", async () => {
+        disablePlayButtons();
+
+        await delay(HIT_TIME);
         await dealCard(players[1]);
-        checkGameStatus();
+        if (!checkGameStatus()) enablePlayButtons();
     });
 
     standButton.addEventListener("click", async () => {
+        disablePlayButtons();
+
         players[0].reveal();
 
         while (players[0].total < 17) {
+            await delay(1000);
             await dealCard(players[0]);
             players[0].reveal();
         }
@@ -177,8 +184,7 @@ async function newRound() {
     // check to see if player or dealer have blackjacks
     checkGameStatus();
 
-    hitButton.disabled = false;
-    hitButton.disabled = false;
+    enablePlayButtons();
 }
 
 async function reset() {
@@ -187,8 +193,7 @@ async function reset() {
     testingDiv.innerHTML = "";
 
     // make the hit and stand buttons clickable again
-    hitButton.disabled = false;
-    standButton.disabled = false;
+    enablePlayButtons();
 
     // clear dealer and players hands and shuffle deck
     players[0].clearHand();
@@ -200,6 +205,7 @@ async function initialize() {
     for (let i = 0; i < 2; i++) {
         for (let j = 0; j < players.length; j++) {
             await dealCard(players[j]);
+            await delay(HIT_TIME);
         }
     }
 }
@@ -207,13 +213,14 @@ async function initialize() {
 async function dealCard(user) {
     const card = await deck.drawCard();
 
-    user.hit(card);
+    user.hit(card)
 }
 
 /*
 make it less spaghetti code
 make the new round screen a pop up with blacked out background
 */
+// return true if game over, false otherwise
 function checkGameStatus() {
     const dealerTotal = players[0].total;
     const playerTotal = players[1].total;
@@ -248,11 +255,13 @@ function checkGameStatus() {
         newRoundButton.textContent = "New round"; //temp
         testingDiv.appendChild(newRoundButton); //temp
 
-        hitButton.disabled = true;
-        standButton.disabled = true;
+        disablePlayButtons();
 
         newRoundButton.addEventListener("click", newRound);
+        return true;
     }
+
+    return false;
 }
 
 function checkWinner() {
@@ -277,8 +286,7 @@ function checkWinner() {
     newRoundButton.textContent = "New round"; //temp
     testingDiv.appendChild(newRoundButton); //temp
 
-    hitButton.disabled = true;
-    standButton.disabled = true;
+    disablePlayButtons();
 
     newRoundButton.addEventListener("click", newRound);
 }
@@ -316,10 +324,10 @@ function makeCardElement(number, suit) {
     else suitCode = "&#9824;";
 
     topNumber.textContent = number.slice(0, 1);
-    if (number === 10) topNumber.textContent = 10;
+    if (number == 10) topNumber.textContent = 10;
     topSuit.innerHTML = suitCode;
     bottomNumber.textContent = number.slice(0, 1);
-    if (number === 10) bottomNumber.textContent = 10;
+    if (number == 10) bottomNumber.textContent = 10;
     bottomSuit.innerHTML = suitCode;
 
     // append elements
@@ -331,4 +339,18 @@ function makeCardElement(number, suit) {
     cardBlock.appendChild(cardBottomSection);
 
     return cardBlock;
+}
+
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
+function disablePlayButtons() {
+    hitButton.disabled = true;
+    standButton.disabled = true;
+}
+
+function enablePlayButtons() {
+    hitButton.disabled = false;
+    standButton.disabled = false;
 }
