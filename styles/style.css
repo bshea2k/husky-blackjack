@@ -123,3 +123,57 @@
     color: black;
     background-color: black;
 }
+
+/* Singleplayer round end popup */
+.round-end-singleplayer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: #00000088;
+    z-index: 9999;
+    pointer-events: all;
+}
+
+.round-end-singleplayer--hidden {
+    display: none;
+}
+
+.round-end-singleplayer__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+
+    width: 233px;
+    height: 233px;
+    padding: 13px;
+
+    background-color: #076144;
+    border-radius: 13px;
+}
+
+.round-end-singleplayer__text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    background-color: inherit;
+}
+
+.round-end-singleplayer__header {
+    background-color: inherit;
+    text-align: center;
+}
+
+.round-end-singleplayer__message {
+    background-color: inherit;
+    text-align: center;
+}
