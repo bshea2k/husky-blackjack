@@ -232,6 +232,7 @@ function checkGameStatus() {
             roundEndPopup("Player Bust");
         }
 
+        players[0].reveal();
         return true;
     }
 
@@ -251,8 +252,6 @@ function checkWinner() {
     } else {
         roundEndPopup("Push");
     }
-
-    //disablePlayButtons();
 }
 
 function makeCardElement(number, suit) {
