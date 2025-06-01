@@ -176,7 +176,7 @@ async function domLoaded() {
 
 async function newRound() {
     // clear data from previous round
-    await reset();
+    await resetHands();
 
     // initialize game (deal cards to dealer and player)
     await initialize();
@@ -187,13 +187,10 @@ async function newRound() {
     enablePlayButtons();
 }
 
-async function reset() {
+async function resetHands() {
     // make the popup screen denoting new round go away
     const testingDiv = document.querySelector(".testing");
     testingDiv.innerHTML = "";
-
-    // make the hit and stand buttons clickable again
-    enablePlayButtons();
 
     // clear dealer and players hands and shuffle deck
     players[0].clearHand();
