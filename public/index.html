@@ -26,7 +26,7 @@
         <nav class="menu">
             <div class="menu__main-buttons">
                 <a href="./pages/single-player.html"><button class="button button--large" id="singleplayer-btn">Singleplayer</button></a>
-                <a href="./pages/multi-player.html"><button class="button button--large button--disabled" id="multiplayer-btn" disabled>Multiplayer</button></a>
+                <button class="button button--large button--disabled" id="multiplayer-btn" disabled>Multiplayer</button>
             </div>
             <div class="menu__misc-buttons">
                 <a href="./pages/game-creation.html"><button class="button button--small button--disabled" id="private-btn" disabled>Create Private Room</button></a>
@@ -34,5 +34,15 @@
             </div>
         </nav>
     </main>
+    <div class="multiplayer-join multiplayer-join--hidden">
+        <div class="multiplayer-join__content">
+            <h2 class="multiplayer-join__header">Join Game</h2>
+            <button class="multiplayer-join__exit">X</button>
+            <form action="./pages/multi-player.html" class="multiplayer-join__form">
+                <label for="room-code" class="multiplayer-join__label">Room code:</label>
+                <input type="text" id="room-code" name="room-code" class="multiplayer-join__input">
+            </form>
+        </div>
+    </div>
 </body>
 </html>
