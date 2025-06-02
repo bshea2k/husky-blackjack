@@ -59,6 +59,19 @@
     margin-left: auto;
 }
 
+/* navigation */
+.navigation__sign-in {
+    margin-left: auto;
+    border: none;
+    cursor: pointer;
+}
+
+.navigation__profile-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 100%;
+}
+
 /* card styling */
 .card {
     display: flex;
