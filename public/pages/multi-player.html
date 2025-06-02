@@ -7,6 +7,7 @@
     <link href="../styles/multi-player.css" rel="stylesheet">
     <link href="../styles/game-layout.css" rel="stylesheet">
     <title>Husky Blackjack - Multi Player</title>
+    <script defer src="./scripts/authentication.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-app-compat.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-firestore-compat.js"></script>
@@ -16,7 +17,9 @@
     <header class="multi-player-header">
         <nav class="non-home-banner">
             <a href="../index.html"><img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack"></a>
-            <img class="non-home-banner__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
+            <button class="navigation__sign-in" onclick="googleLogin()">
+              <img class="navigation__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
+            </button>
         </nav>
         <div class="multi-player-header__title">
             <h1 class="multi-player-header__text">Multiplayer</h1>

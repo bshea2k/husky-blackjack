@@ -8,6 +8,7 @@
     <link href="../styles/game-layout.css" rel="stylesheet">
     <script src="../scripts/game-logic.js" defer></script>
     <title>Husky Blackjack - Single Player</title>
+    <script defer src="./scripts/authentication.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-app-compat.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-firestore-compat.js"></script>
@@ -17,7 +18,9 @@
     <header class="single-player-header">
         <nav class="non-home-banner">
             <a href="../index.html"><img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack"></a>
-            <img class="non-home-banner__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
+            <button class="navigation__sign-in" onclick="googleLogin()">
+              <img class="navigation__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
+            </button>
         </nav>
         <div class="single-player-header__title">
             <h1 class="single-player-header__text">Singleplayer</h1>
