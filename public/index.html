@@ -7,6 +7,7 @@
     <link href="./styles/style.css" rel="stylesheet">
     <link href="./styles/home.css" rel="stylesheet">
     <script defer src="./scripts/authentication.js"></script>
+    <script defer src="./scripts/index.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-app-compat.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/11.8.1/firebase-firestore-compat.js"></script>
@@ -24,12 +25,12 @@
     <main>
         <nav class="menu">
             <div class="menu__main-buttons">
-                <a href="./pages/single-player.html"><button class="button button--large">Singleplayer</button></a>
-                <a href="./pages/multi-player.html"><button class="button button--large">Multiplayer</button></a>
+                <a href="./pages/single-player.html"><button class="button button--large" id="singleplayer-btn">Singleplayer</button></a>
+                <a href="./pages/multi-player.html"><button class="button button--large button--disabled" id="multiplayer-btn" disabled>Multiplayer</button></a>
             </div>
             <div class="menu__misc-buttons">
-                <a href="./pages/game-creation.html"><button class="button button--small">Create Private Room</button></a>
-                <button class="button button--small">Leaderboard</button>
+                <a href="./pages/game-creation.html"><button class="button button--small button--disabled" id="private-btn" disabled>Create Private Room</button></a>
+                <button class="button button--small" id="leaderboard-btn">Leaderboard</button>
             </div>
         </nav>
     </main>
