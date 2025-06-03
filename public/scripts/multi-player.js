@@ -1,17 +1,18 @@
 const app = firebase.app();
 const db = firebase.firestore();
 const url = new URLSearchParams(window.location.search);
-const roomCode = url.get("room-code");
 
-const gamesRef = db.collection("games");
-const roomQuery = gamesRef.where("room-code", "==", roomCode);
-//const playersRef = room.collection("players");
+let roomCode;
+let gamesRef;
+let roomQuery;
 let playersRef;
 
 document.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {
     console.log(roomCode); //temp
+
+    await initializeRoomData();
 
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
@@ -20,12 +21,6 @@ async function domLoaded() {
             openRestrictedPopup();
         }
     });
-
-    await roomQuery.get().then((querySnapshot) => {
-        const roomDoc = querySnapshot.docs[0];
-        const roomRef = roomDoc.ref;
-        playersRef = roomRef.collection("players");
-    })
 
     // create multiplayer hand for each player already in database
     playersRef.get()
@@ -37,6 +32,18 @@ async function domLoaded() {
                 multiplayerHands.appendChild(multiplayerHand);
             })
         })
+}
+
+async function initializeRoomData() {
+    roomCode = url.get("room-code");
+    gamesRef = db.collection("games");
+    roomQuery = gamesRef.where("room-code", "==", roomCode);
+
+    await roomQuery.get().then((querySnapshot) => {
+        const roomDoc = querySnapshot.docs[0];
+        const roomRef = roomDoc.ref;
+        playersRef = roomRef.collection("players");
+    });
 }
 
 function openRestrictedPopup() {
