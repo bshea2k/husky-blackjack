@@ -26,7 +26,7 @@ async function domLoaded() {
         .then(players => {
             players.forEach(doc => {
                 data = doc.data();
-                const multiplayerHand = makeMultiplayerHand(data.uid, data.displayName, data.photoURL);
+                const multiplayerHand = makeMultiplayerHand(data.uid, data.displayName, data.profilePicture);
                 const multiplayerHands = document.querySelector(".multiplayer-hands");
                 multiplayerHands.appendChild(multiplayerHand);
             })
