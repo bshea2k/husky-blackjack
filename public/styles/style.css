@@ -277,7 +277,16 @@
     text-align: center;
 }
 
-/* multiplayer hand display */
+/* multiplayer hands display */
+.multiplayer-hands {
+    margin: 0px 21px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+/* multiplayer individual hand display */
 .multiplayer-hand {
     display: flex;
     flex-direction: column;
