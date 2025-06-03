@@ -33,12 +33,12 @@ function domLoaded() {
         }
 
         startBtn.addEventListener("click", () => {
-            doc.update({status: "started"});
+            gameRef.update({status: "started"});
         })
 
         if (data.status === "started") {
             const roomCode = data.roomCode;
-            const targetUrl = `multip-player.html?room-code=${roomCode}`;
+            const targetUrl = `multip-player.html?room-code=${encodeURIComponent(roomCode)}`;
 
             window.location.href = targetUrl;
         }
