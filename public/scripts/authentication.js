@@ -5,7 +5,7 @@ async function domLoaded() {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             profileIcon.setAttribute("src", user.photoURL);
-            console.log("done");
+            console.log(user);
         } else {
             console.log("not logged in");
         } 

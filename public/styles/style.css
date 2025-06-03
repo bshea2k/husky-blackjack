@@ -276,3 +276,52 @@
     font-size: 21px;
     text-align: center;
 }
+
+/* multiplayer hand display */
+.multiplayer-hand {
+    display: flex;
+    flex-direction: column;
+
+    width: 233px;
+    padding: 21px;
+    gap: 21px;
+
+    background-color: #076144;
+    border-radius: 8px;
+}
+
+.multiplayer-hand__user-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 13px;
+
+    background-color: inherit;
+}
+
+.multiplayer-hand__icon {
+    width: 34px;
+    height: 34px;
+
+    background-color: inherit;
+    border-radius: 100%;
+}
+
+.multiplayer-hand__name {
+    font-size: 18px;
+    font-weight: bold;
+    background-color: inherit;
+}
+
+.multiplayer-hand__score {
+    background-color: inherit;
+}
+
+.multiplayer-hand__cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 13px;
+
+    background-color: inherit;
+}
