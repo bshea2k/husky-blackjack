@@ -2,7 +2,7 @@ const app = firebase.app();
 const db = firebase.firestore();
 const url = new URLSearchParams(window.location.search);
 
-let roomCode;
+const roomCode = url.get("room-code");
 let gamesRef;
 let roomQuery;
 let playersRef;
@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {
     console.log(roomCode); //temp
-
     await initializeRoomData();
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -35,9 +34,8 @@ async function domLoaded() {
 }
 
 async function initializeRoomData() {
-    roomCode = url.get("room-code");
     gamesRef = db.collection("games");
-    roomQuery = gamesRef.where("room-code", "==", roomCode);
+    roomQuery = gamesRef.where("roomCode", "==", roomCode);
 
     await roomQuery.get().then((querySnapshot) => {
         const roomDoc = querySnapshot.docs[0];
@@ -69,6 +67,7 @@ function makeMultiplayerHand(uid, displayName, profileUrl) {
     score.classList.add(`multiplayer-hand__score--${uid}`);
     const cards = document.createElement("div");
     cards.classList.add("multiplayer-hand__cards");
+    cards.classList.add(`multiplayer-hand__cards--${uid}`);
 
     // add content to elements
     name.textContent = `${displayName}: `;
