@@ -20,21 +20,21 @@ function domLoaded() {
         }
     });
 
+    // game starts if host clicks start button
+    const startBtn = document.querySelector(".game-creation-panel__submit");
+    startBtn.addEventListener("click", () => {
+        gameRef.update({status: "started"});
+    })
+
     // start game button disabled for non-host users, and redirect users if game starts
     gameRef.onSnapshot(doc => {
         const data = doc.data();
         const user = firebase.auth().currentUser;
 
-        const startBtn = document.querySelector(".game-creation-panel__submit");
-
         if (user.uid != data.hostUid) {
             startBtn.disabled = true;
             startBtn.classList.add("button--disabled");
         }
-
-        startBtn.addEventListener("click", () => {
-            gameRef.update({status: "started"});
-        })
 
         if (data.status === "started") {
             const roomCode = data.roomCode;
