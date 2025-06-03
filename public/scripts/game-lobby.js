@@ -20,17 +20,28 @@ function domLoaded() {
         }
     });
 
-    // start game button disabled for non-host users
-    const startBtn = document.querySelector(".game-creation-panel__submit");
-    firebase.auth().onAuthStateChanged((user) => {
-        gameRef.get()
-            .then(doc => {
-                const data = doc.data;
-                if (user.uid != data.hostUid) {
-                    startBtn.disabled = true;
-                    startBtn.classList.add("button--disabled");
-                }
-            })
+    // start game button disabled for non-host users, and redirect users if game starts
+    gameRef.onSnapshot(doc => {
+        const data = doc.data();
+        const user = firebase.auth().currentUser;
+
+        const startBtn = document.querySelector(".game-creation-panel__submit");
+
+        if (user.uid != data.hostUid) {
+            startBtn.disabled = true;
+            startBtn.classList.add("button--disabled");
+        }
+
+        startBtn.addEventListener("click", () => {
+            doc.update({status: "started"});
+        })
+
+        if (data.status === "started") {
+            const roomCode = data.roomCode;
+            const targetUrl = `multip-player.html?room-code=${roomCode}`;
+
+            window.location.href = targetUrl;
+        }
     })
 }
 
