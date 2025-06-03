@@ -71,6 +71,7 @@ main {
     border-radius: 10px;
     box-shadow: 0 4px #321c60;
     cursor: pointer;
+    justify-content: center;
 }
 
 .game-creation-panel__submit:hover {

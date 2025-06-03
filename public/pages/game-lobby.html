@@ -16,8 +16,8 @@
 <body>
     <header class="game-creation-header">
         <nav class="non-home-banner">
-            <a href="../index.html"><img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack"></a>
-            <button class="navigation__sign-in" onclick="googleLogin()">
+            <img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack">
+            <button class="navigation__sign-in">
                 <img class="navigation__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
             </button>
         </nav>
@@ -35,7 +35,8 @@
             </div>
             <div class="player-list"></div> 
             <div class="game-creation-panel__option">
-              <button class="game-creation-panel__submit">Start Game</button>
+              <button class="game-creation-panel__submit" id="game-lobby-leave">Leave Lobby</button>
+              <button class="game-creation-panel__submit" id="game-lobby-start">Start Game</button>
             </div>
           </div>
     </main>

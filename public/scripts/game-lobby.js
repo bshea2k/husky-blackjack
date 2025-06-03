@@ -21,7 +21,7 @@ function domLoaded() {
     });
 
     // game starts if host clicks start button
-    const startBtn = document.querySelector(".game-creation-panel__submit");
+    const startBtn = document.getElementById("game-lobby-start");
     startBtn.addEventListener("click", () => {
         gameRef.update({status: "started"});
     })
@@ -43,6 +43,22 @@ function domLoaded() {
             window.location.href = targetUrl;
         }
     })
+
+    // leaving a lobby
+    const leaveBtn = document.getElementById("game-lobby-leave");
+    leaveBtn.addEventListener("click", async () => {
+        const user = firebase.auth().currentUser;
+        if (!user) return;
+        const playerRef = gameRef.collection("players").doc(user.uid);
+        try {
+        //when players leave their information is deleted from the database
+            await playerRef.delete();
+            window.location.href = "../index.html";
+        } catch (err) {
+            console.error("Failed to leave lobby:", err);
+            alert("Error leaving the lobby.");
+        }
+    });
 }
 
 function getRoomIdFromURL() {
