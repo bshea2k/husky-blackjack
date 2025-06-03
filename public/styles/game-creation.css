@@ -76,3 +76,10 @@ main {
 .game-creation-panel__submit:hover {
     filter: brightness(0.9);
 }
+
+/* player list */
+.player-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-top: 12px;
+}

@@ -146,6 +146,9 @@
 .card--hidden {
     color: black;
     background-color: black;
+    opacity: 40%;
+    pointer-events: none;
+    user-select: none; 
 }
 
 /* Singleplayer round end popup */

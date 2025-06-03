@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../styles/style.css" rel="stylesheet">
+    <link href="../styles/game-creation.css" rel="stylesheet">
+    <title>Husky Blackjack - Multiplayer Game Creation</title>
+    <script defer src="../scripts/authentication.js"></script>
+    <script defer src="../scripts/game-lobby.js"></script>
+    <script defer src="/__/firebase/11.8.1/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/11.8.1/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/11.8.1/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+</head>
+<body>
+    <header class="game-creation-header">
+        <nav class="non-home-banner">
+            <a href="../index.html"><img class ="wordmark wordmark--small" src="../images/main-logo.png" alt ="Bold text that spells out the words husky blackjack"></a>
+            <button class="navigation__sign-in" onclick="googleLogin()">
+                <img class="navigation__profile-icon" src="../images/default-profile-icon.png" alt="Profile picture icon">
+            </button>
+        </nav>
+        <div class="game-creation-header__title">
+            <h1 class="game-creation-header__text">Game Lobby</h1>
+        </div>
+    </header>
+    <main>
+        <div class="game-creation-panel">
+            <div class="game-creation-panel__option">
+              <label class="game-creation-panel__label" id="room-code">Room Code: </label>
+            </div>
+            <div class="game-creation-panel__option">
+              <label class="game-creation-panel__label" id="player-count">Players: </label>
+            </div>
+            <div class="player-list"></div> 
+            <div class="game-creation-panel__option">
+              <button class="game-creation-panel__submit">Start Game</button>
+            </div>
+          </div>
+    </main>
+</body>
+</html>
