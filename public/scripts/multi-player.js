@@ -1,15 +1,16 @@
 const app = firebase.app();
 const db = firebase.firestore();
 const url = new URLSearchParams(window.location.search);
-const roomCode = URLSearchParams.length("room-code");
+const roomCode = url.get("room-code");
 
 const gamesRef = db.collection("games");
-const room = gamesRef.where("room-code", "==", roomCode);
-const playersRef = room.collection("players");
+const roomQuery = gamesRef.where("room-code", "==", roomCode);
+//const playersRef = room.collection("players");
+let playersRef;
 
 document.addEventListener("DOMContentLoaded", domLoaded);
 
-function domLoaded() {
+async function domLoaded() {
     console.log(roomCode); //temp
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -20,13 +21,19 @@ function domLoaded() {
         }
     });
 
+    await roomQuery.get().then((querySnapshot) => {
+        const roomDoc = querySnapshot.docs[0];
+        const roomRef = roomDoc.ref;
+        playersRef = roomRef.collection("players");
+    })
+
     // create multiplayer hand for each player already in database
     playersRef.get()
         .then(players => {
             players.forEach(doc => {
                 data = doc.data();
                 const multiplayerHand = makeMultiplayerHand(data.uid, data.displayName, data.photoURL);
-                const multiplayerHands = document.querySelector("multiplayer-hands");
+                const multiplayerHands = document.querySelector(".multiplayer-hands");
                 multiplayerHands.appendChild(multiplayerHand);
             })
         })
