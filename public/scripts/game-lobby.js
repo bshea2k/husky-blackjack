@@ -19,6 +19,19 @@ function domLoaded() {
             alert("Game not found.");
         }
     });
+
+    // start game button disabled for non-host users
+    const startBtn = document.querySelector(".game-creation-panel__submit");
+    firebase.auth().onAuthStateChanged((user) => {
+        gameRef.get()
+            .then(doc => {
+                const data = doc.data;
+                if (user.uid != data.hostUid) {
+                    startBtn.disabled = true;
+                    startBtn.classList.add("button--disabled");
+                }
+            })
+    })
 }
 
 function getRoomIdFromURL() {
