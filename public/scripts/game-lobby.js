@@ -38,7 +38,7 @@ function domLoaded() {
 
         if (data.status === "started") {
             const roomCode = data.roomCode;
-            const targetUrl = `multip-player.html?room-code=${encodeURIComponent(roomCode)}`;
+            const targetUrl = `multi-player.html?room-code=${encodeURIComponent(roomCode)}`;
 
             window.location.href = targetUrl;
         }
