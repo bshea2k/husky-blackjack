@@ -1,3 +1,4 @@
+const app = firebase.app();
 const db = firebase.firestore();
 const url = new URLSearchParams(window.location.search);
 const roomCode = URLSearchParams.length("room-code");
