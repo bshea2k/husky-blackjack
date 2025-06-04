@@ -37,7 +37,6 @@ function domLoaded() {
     });
 
     // game starts if host clicks start button
-<<<<<<< HEAD
     const startBtn = document.getElementById("game-lobby-start");
     startBtn.addEventListener("click", async () => {
         try {
@@ -70,12 +69,6 @@ function domLoaded() {
             console.error("Update failed:", err);
         }
     });
-=======
-    const startBtn = document.querySelector(".game-creation-panel__submit");
-    startBtn.addEventListener("click", async () => {
-        await gameRef.update({status: "started"});
-    })
->>>>>>> multiplayer-anon
 
     // start game button disabled for non-host users, and redirect users if game starts
 
@@ -94,23 +87,7 @@ function domLoaded() {
             console.error("Failed to leave lobby:", err);
             alert("Error leaving the lobby.");
         }
-<<<<<<< HEAD
     });
-=======
-
-        if (data.status === "started") {
-            console.log("Status got updated to started"); //temp
-            const roomCode = data.roomCode;
-            const targetUrl = `multi-player.html?room-code=${encodeURIComponent(roomCode)}`;
-
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 2000);
-            
-            //window.location.href = targetUrl;
-        }
-    })
->>>>>>> multiplayer-anon
 }
 
 function getRoomIdFromURL() {
@@ -160,8 +137,4 @@ function displayPlayers(db, roomId) {
             playerList.appendChild(playerDiv);
         });
     });
-}
-
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
 }
