@@ -137,7 +137,6 @@ let gamesRef;
 let roomDoc;
 let playersRef;
 let currentUserDoc;
-let dealerDoc;
 
 const hitButton = document.querySelector("#hit-btn");
 const standButton = document.querySelector("#stand-btn");
@@ -167,6 +166,7 @@ async function domLoaded() {
     if (hostUid === currentUser.uid) {
         deck = await new Deck().init();
         roomDoc.update({deckId: deck.deckId});
+        currentUserDoc.update({allPlayersTurnOver: false});
     }
     deck = new Deck(deck.deckId);
 
@@ -175,6 +175,15 @@ async function domLoaded() {
 
     // set up play buttons
     initializePlayButtons();
+
+    // set up snapshot to see when game is over
+    if (currentUser.uid === hostUid) {
+        setInterval(() => {
+            if (checkAllTurnsOver() === true) {
+                roomDoc.update({allPlayersTurnOver: true});
+            }
+        }, 3000);
+    }
 
     // new round
     await newRound();
@@ -232,15 +241,36 @@ function initializePlayButtons() {
         await delay(HIT_TIME);
         await dealCard(player);
         // check to see if they have bust
-        // - if bust, end their turn
-        // - if not bust, enable buttons
-        enablePlayButtons();
+        if (player.total > 21) {
+            currentUserDoc.update({turnOver: true});
+        } else {
+            enablePlayButtons();
+        }
     });
 
     standButton.addEventListener("click", async () => {
         console.log("Stand") //temp
         // go to next users turn
     });
+}
+
+async function checkAllTurnsOver() {
+    let allTurnsOver = true;
+
+    if (hostUid = currentUser.uid) {
+        playersRef.get()
+        .then(players => {
+            players.forEach(doc => {
+                data = doc.data();
+                
+                if (data.turnOver === false) {
+                    allTurnsOver = false;
+                }
+            })
+        });
+    }
+
+    return allTurnsOver;
 }
 
 async function initializePlayers() {
@@ -288,17 +318,26 @@ async function initializeSync() {
                 const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
                 const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
 
-                if (cardsData.length > 0) {
+                if (cardsData.length > 0 && data.turnOver === false) {
                     const cardWords = cardsData[cardsData.length - 1].split(" ");
                     const cardElement = makeCardElement(cardWords[0], cardWords[1]);
                     
                     cardZone.appendChild(cardElement);
                     scoreCounter.textContent = data.score;
                 }
+
+                if (data.turnOver === true) {
+
+                }
+
+                if (data.dealerTurnOver === true) {
+
+                }
             })
         })
     })
 
+    // room listener, checks and updates when dealer draws or wins/busts
     await roomDoc.onSnapshot(doc => {
         const data = doc.data();
         const cardsData = data.dealerCards;
@@ -332,6 +371,10 @@ async function initialDeal() {
         for (let i = 0; i < 2; i++) {
             await delay(1000);
             await dealCard(dealer);
+        }
+
+        if (dealer.total === 21) {
+            roomDoc.update({dealerTurnOver: true});
         }
     }
 
