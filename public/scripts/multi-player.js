@@ -168,10 +168,14 @@ async function domLoaded() {
         await roomDoc.update({deckId: deck.deckId});
         await roomDoc.update({allPlayersTurnOver: false});
     }
-    roomDoc.get().then(doc => {
-        deck = doc.data().deckId;
+
+    let tempDeckId;
+    await roomDoc.get().then(doc => {
+        tempDeckId = doc.data().deckId;
     })
-    deck = new Deck(deck);
+    deck = new Deck(tempDeckId);
+
+    //deck = new Deck(deck);
 
     // set up syncing
     await initializeSync();
@@ -183,7 +187,8 @@ async function domLoaded() {
     if (currentUser.uid === hostUid) {
         setInterval(async () => {
             if (await checkAllTurnsOver() === true) {
-                roomDoc.update({allPlayersTurnOver: true});
+                roomDoc.update({allPlayersTurnOver: true,});
+                await dealerDraw();
             }
         }, 3000);
     }
@@ -391,6 +396,15 @@ async function initialDeal() {
         await delay(HIT_TIME);
         await dealCard(player);
     }
+}
+
+async function dealerDraw() {
+    while (await dealer.total < 17) {
+        await delay(1000);
+        await dealCard(dealer);
+    }
+
+    roomDoc.update({dealerTurnOver: true});
 }
 
 async function resetHands() {
