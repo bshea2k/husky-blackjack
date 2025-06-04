@@ -165,9 +165,15 @@ async function domLoaded() {
     // set up players
     await initializePlayers();
 
-    //initialize deck
-    deck = await new Deck().init();
-    roomDoc.update({deckId: deck.deckId});
+    //initialize deck (only host sets deck)
+    roomDoc.get().then(async doc => {
+        const data = doc.data();
+
+        if (data.hostUid === currentUser.uid) {
+            deck = await new Deck().init();
+            roomDoc.update({deckId: deck.deckId});
+        }
+    })
 
     // set up play buttons
     initializePlayButtons();
@@ -229,7 +235,6 @@ async function initializePlayers() {
 
 async function newRound() {
     // - reset hands
-    playersRef
     // - remove popup
     // - deal cards to dealer and players
     // - checkgamestatus (if any players or dealers have bust)
