@@ -1,57 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Husky Blackjack – Leader Board</title>
-
-  <!-- global background and button styles -->
-  <link href="../styles/style.css" rel="stylesheet">
-  <!-- CSS just for the leader board table -->
-  <link href="../styles/leader-board.css" rel="stylesheet">
-
-  <!-- Firebase scripts  -->
+  <link href="../styles/style.css" rel="stylesheet" />
+  <link href="../styles/leader-board.css" rel="stylesheet" />
   <script defer src="/__/firebase/11.8.1/firebase-app-compat.js"></script>
   <script defer src="/__/firebase/11.8.1/firebase-auth-compat.js"></script>
   <script defer src="/__/firebase/11.8.1/firebase-firestore-compat.js"></script>
   <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-  <!-- JavaScript to load the top users -->
   <script defer src="../scripts/leader-board.js"></script>
+  <script defer src="../scripts/authentication.js"></script>
 </head>
 <body>
-  <!-- header with logo and profile icon -->
-  <header class="leaderboard-header">
-    <nav class="non-home-banner">
-      <a href="../index.html">
-        <img class="wordmark wordmark--small" 
-             src="../images/main-logo.png" 
-             alt="Husky Blackjack">
-      </a>
-      <button class="navigation__sign-in" onclick="googleLogin()">
-        <img class="navigation__profile-icon" 
-             src="../images/default-profile-icon.png" 
-             alt="Profile picture icon">
-      </button>
-    </nav>
-    <div class="leaderboard-header__title">
-      <h1 class="leaderboard-header__text">Leader Board</h1>
-    </div>
+  <header class="leaderboard-topbar">
+    <a href="../index.html">
+      <img
+        class="wordmark wordmark--small"
+        src="../images/main-logo.png"
+        alt="Husky Blackjack logo"
+      />
+    </a>
+    <button class="navigation__sign-in" onclick="googleLogin()">
+      <img
+        class="navigation__profile-icon"
+        src="../images/default-profile-icon.png"
+        alt="Profile icon"
+      />
+    </button>
   </header>
 
   <main class="leaderboard-main">
-    <table class="leaderboard-table">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Player</th>
-          <th>Chips</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body">
-        <tr><td colspan="3">Loading…</td></tr>
-      </tbody>
-    </table>
+    <div class="leaderboard-card">
+      <h1 class="leaderboard-card__title">Leaderboard</h1>
+      <div class="leaderboard-controls">
+        <div class="leaderboard-dropdown-group">
+          <select id="time-range" class="leaderboard-dropdown">
+            <option value="session">This session</option>
+            <option value="all-time">All time</option>
+          </select>
+        </div>
+        <div class="leaderboard-refresh-group">
+          <button id="refresh-btn" class="leaderboard-refresh-btn" title="Refresh">
+            &#x21bb;
+          </button>
+        </div>
+      </div>
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th class="col-rank">Rank</th>
+            <th class="col-player">Player</th>
+            <th class="col-chips">Chips</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td colspan="3" class="no-users">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </main>
 </body>
 </html>
