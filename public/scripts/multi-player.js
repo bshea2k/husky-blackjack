@@ -172,6 +172,7 @@ async function domLoaded() {
     await roomDoc.get().then(doc => {
         tempDeckId = doc.data().deckId;
     })
+    console.log(`Deck id is: ${tempDeckId}`);
     deck = new Deck(tempDeckId);
 
     //deck = new Deck(deck);
@@ -327,21 +328,17 @@ async function initializeSync() {
                 const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
                 const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
 
-                if (cardsData.length > 0 && data.turnOver === false) {
-                    const cardWords = cardsData[cardsData.length - 1].split(" ");
-                    const cardElement = makeCardElement(cardWords[0], cardWords[1]);
-                    
+                while (cardZone.firstElementChild) {
+                    cardZone.removeChild(cardZone.firstElementChild);
+                }
+        
+                for (const cardStr of cardsData) {
+                    const [value, suit] = cardStr.split(" ");
+                    const cardElement = makeCardElement(value, suit);
                     cardZone.appendChild(cardElement);
-                    scoreCounter.textContent = data.score;
                 }
 
-                if (data.turnOver === true) {
-
-                }
-
-                if (data.dealerTurnOver === true) {
-
-                }
+                scoreCounter.textContent = data.score;
             })
         })
     })
@@ -568,6 +565,4 @@ function roundEndPopup() {
     const popup = document.querySelector(".multiplayer-round-over");
 
     popup.classList.remove("multiplayer-round-over--hidden");
-
-    console.log(popup);
 }
