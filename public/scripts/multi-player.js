@@ -1,11 +1,151 @@
+class Deck {
+    constructor(deckId) {
+        this.deckId = deckId;
+    }
+
+    async init() {
+        const res = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
+        const data = await res.json();
+
+        return new Deck(data.deck_id);
+    }
+
+    // shuffles the deck
+    async shuffle() {
+        const res = await fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/shuffle/`);
+    }
+
+    // draws a card, returns the card drawn
+    async drawCard() {
+        const res = await fetch(`https://deckofcardsapi.com/api/deck/${this.deckId}/draw/?count=1`);
+        const data = await res.json();
+
+        return data.cards[0];
+    }
+}
+
+class Player {
+    constructor(cardZone, scoreCounter) {
+        this.hand = [];
+        this.cardZone = document.querySelector(`${cardZone}`);
+        this.scoreCounter = document.querySelector(`${scoreCounter}`)
+    }
+
+    hit(card) {
+        this.hand.push(card);
+        
+        const cardElement = makeCardElement(card.value, card.suit.toLowerCase());
+        this.cardZone.appendChild(cardElement);
+
+        this.scoreCounter.textContent = this.total;
+    }
+
+    get total() {
+        let lowTotal = 0;
+        let highTotal = 0;
+
+        for (let i = 0; i < this.hand.length; i++) {
+            if (this.hand[i].value === "ACE") {
+                lowTotal += 1;
+                highTotal += 11;
+                continue;
+            }
+            else if (this.hand[i].value === "JACK" || this.hand[i].value === "QUEEN" || this.hand[i].value === "KING") {
+                lowTotal += 10;
+                highTotal += 10;
+                continue;
+            }
+
+            lowTotal += parseInt(this.hand[i].value);
+            highTotal += parseInt(this.hand[i].value);
+        }
+
+        if (highTotal > 21) return lowTotal;
+        else return highTotal;
+    }
+
+    // returns the card at specified index of players hand
+    getCard(index) {
+        return this.hand[index];
+    }
+
+    clearHand() {
+        this.hand.length = 0;
+        this.cardZone.innerHTML = "";
+        this.scoreCounter.textContent = 0;
+    }
+}
+
+class Dealer extends Player {
+    constructor() {
+        super()
+        this.hand = [];
+        this.cardZone = document.querySelector("#dealer-hand");
+        this.scoreCounter = document.querySelector("#dealer-score")
+    }
+
+    hit(card) {
+        this.hand.push(card);
+        
+        const cardElement = makeCardElement(card.value, card.suit.toLowerCase());
+
+        if (this.hand.length == 1) {
+            cardElement.classList.add("card--hidden");
+        }
+
+        this.cardZone.appendChild(cardElement);
+
+        this.scoreCounter.textContent = this.hiddenTotal + "?";
+    }
+
+    get hiddenTotal() {
+        let lowTotal = 0;
+        let highTotal = 0;
+
+        for (let i = 1; i < this.hand.length; i++) {
+            if (this.hand[i].value === "ACE") {
+                lowTotal += 1;
+                highTotal += 11;
+                continue;
+            }
+            else if (this.hand[i].value === "JACK" || this.hand[i].value === "QUEEN" || this.hand[i].value === "KING") {
+                lowTotal += 10;
+                highTotal += 10;
+                continue;
+            }
+
+            lowTotal += parseInt(this.hand[i].value);
+            highTotal += parseInt(this.hand[i].value);
+        }
+
+        if (highTotal > 21) return lowTotal;
+        else return highTotal;
+    }
+
+    reveal() {
+        const hiddenCard = this.cardZone.firstElementChild;
+        hiddenCard.classList.remove("card--hidden");
+        this.scoreCounter.textContent = this.total;
+    }
+}
+
+const HIT_TIME = 250;
+let deck;
+const players = [];
+
 const app = firebase.app();
 const db = firebase.firestore();
 const url = new URLSearchParams(window.location.search);
 
 const roomCode = url.get("room-code");
+let currentUser;
 let gamesRef;
-let roomQuery;
+let roomDoc;
 let playersRef;
+let currentUserDoc;
+
+const hitButton = document.querySelector("#hit-btn");
+const standButton = document.querySelector("#stand-btn");
 
 document.addEventListener("DOMContentLoaded", domLoaded);
 
@@ -18,10 +158,61 @@ async function domLoaded() {
             // start game stuff
         } else {
             openRestrictedPopup();
+            return;
         }
     });
 
-    // create multiplayer hand for each player already in database
+    // set up players
+    await initializePlayers();
+
+    //initialize deck
+    deck = await new Deck().init();
+    gamesRef.update({decKid: deck.deckId});
+
+    // set up play buttons
+    initializePlayButtons();
+
+    // new round
+    await newRound();
+}
+
+async function initializeRoomData() {
+    gamesRef = db.collection("games");
+    const roomQuery = gamesRef.where("roomCode", "==", roomCode);
+
+    await roomQuery.get().then((querySnapshot) => {
+        let roomDoc = querySnapshot.docs[0];
+        const roomRef = roomDoc.ref;
+        roomDoc = gamesRef.doc(roomDoc.id);
+        playersRef = roomRef.collection("players");
+    });
+
+    firebase.auth().onAuthStateChanged((user) => {
+        currentUser = user;
+    })
+}
+
+function openRestrictedPopup() {
+    const popup = document.querySelector(".multiplayer-restricted");
+    popup.classList.remove(".multiplayer-restricted--hidden");
+}
+
+function initializePlayButtons() {
+    hitButton.addEventListener("click", async () => {
+        console.log("Hit") //temp
+        // deal a card to current user
+        // check to see if they have bust
+        // - if bust, end their turn
+        // - if not bust, nothing
+    });
+
+    standButton.addEventListener("click", async () => {
+        console.log("Stand") //temp
+        // go to next users turn
+    });
+}
+
+async function initializePlayers() {
     playersRef.get()
         .then(players => {
             players.forEach(doc => {
@@ -30,23 +221,45 @@ async function domLoaded() {
                 const multiplayerHands = document.querySelector(".multiplayer-hands");
                 multiplayerHands.appendChild(multiplayerHand);
             })
-        })
+        });
+    
+    currentUserDoc = playersRef.where("uid", "==", currentUser.uid)
+        .then(docs => {
+            docs.forEach(doc => {
+                currentUserDoc = doc;
+            })
+        });
+
+    currentUserDoc.update({cards: []});
+    currentUserDoc.update({score: 0});
+    currentUserDoc.update({ready: false});
 }
 
-async function initializeRoomData() {
-    gamesRef = db.collection("games");
-    roomQuery = gamesRef.where("roomCode", "==", roomCode);
-
-    await roomQuery.get().then((querySnapshot) => {
-        const roomDoc = querySnapshot.docs[0];
-        const roomRef = roomDoc.ref;
-        playersRef = roomRef.collection("players");
-    });
+async function newRound() {
+    // - reset hands
+    playersRef
+    // - remove popup
+    // - deal cards to dealer and players
+    // - checkgamestatus (if any players or dealers have bust)
+    // - enable play buttons
 }
 
-function openRestrictedPopup() {
-    const popup = document.querySelector(".multiplayer-restricted");
-    popup.classList.remove(".multiplayer-restricted--hidden");
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
+function disablePlayButtons() {
+    hitButton.disabled = true;
+    standButton.disabled = true;
+    hitButton.classList.add("game-btn--disabled");
+    standButton.classList.add("game-btn--disabled");
+}
+
+function enablePlayButtons() {
+    hitButton.disabled = false;
+    standButton.disabled = false;
+    hitButton.classList.remove("game-btn--disabled");
+    standButton.classList.remove("game-btn--disabled");
 }
 
 function makeMultiplayerHand(uid, displayName, profileUrl) {
