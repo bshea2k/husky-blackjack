@@ -87,3 +87,9 @@
 .multiplayer-restricted__redirect {
     background-color: inherit;
 }
+
+#dealer-hand {
+    display: flex;
+    flex-direction: row;
+    gap: 21px;
+}

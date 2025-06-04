@@ -85,10 +85,10 @@ class Dealer extends Player {
     hit(card) {
         this.hand.push(card);
 
-        dealerDoc.update({
-            cards: firebase.firestore.FieldValue.arrayUnion(`${card.value} ${card.suit.toLowerCase()}`),
-            score: this.total,
-            hiddenScore: this.hiddenTotal
+        roomDoc.update({
+            dealerCards: firebase.firestore.FieldValue.arrayUnion(`${card.value} ${card.suit.toLowerCase()}`),
+            dealerScore: this.total,
+            dealerHiddenScore: this.hiddenTotal
         });
     }
 
@@ -186,7 +186,7 @@ async function initializeRoomData() {
     gamesRef = db.collection("games");
     const roomQuery = await gamesRef.where("roomCode", "==", roomCode).get();
 
-    roomDoc = roomQuery.docs[0].ref;
+    roomDoc = await roomQuery.docs[0].ref;
     playersRef = roomDoc.collection("players");
 
     await firebase.auth().onAuthStateChanged((user) => {
@@ -195,7 +195,7 @@ async function initializeRoomData() {
 
     player = new Player(`#multiplayer-hand__cards--${currentUser.uid}`, `#multiplayer-hand__score--${currentUser.uid}`);
 
-    roomDoc.get().then(async doc => {
+    await roomDoc.get().then(async doc => {
         const data = doc.data();
         hostUid = data.hostUid;
     })
@@ -253,12 +253,11 @@ async function initializeDealer() {
     if (currentUser.uid === hostUid) {
         dealer = new Dealer();
 
-        dealerDoc = roomDoc.collection("dealer").doc("dealer");
-        dealerDoc.set({
-            cards: [],
-            score: 0,
-            hiddenScore: 0
-        });
+        await roomDoc.update({
+            dealerCards: [],
+            dealerScore: 0,
+            dealerHiddenScore: 0
+        })
     }
 }
 
@@ -286,12 +285,12 @@ async function initializeSync() {
         })
     })
 
-    dealerDoc.onSnapshot(doc => {
-        const data = doc.data;
-        const cardsData = data.cards;
+    roomDoc.onSnapshot(doc => {
+        const data = doc.data();
+        const cardsData = data.dealerCards;
 
-        const cardZone = document.querySelector(`.dealer-hand`);
-        const scoreCounter = document.querySelector(`.dealer-score`);
+        const cardZone = document.querySelector(`#dealer-hand`);
+        const scoreCounter = document.querySelector(`#dealer-score`);
 
         if (cardsData.length > 0) {
             const cardWords = cardsData[cardsData.length - 1].split(" ");
@@ -302,7 +301,7 @@ async function initializeSync() {
             }        
 
             cardZone.appendChild(cardElement);
-            scoreCounter.textContent = data.hiddenScore;
+            scoreCounter.textContent = data.dealerHiddenScore;
         }
     })
 }
