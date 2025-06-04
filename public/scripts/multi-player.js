@@ -214,7 +214,6 @@ function openRestrictedPopup() {
 
 function initializePlayButtons() {
     hitButton.addEventListener("click", async () => {
-        console.log("Hit") //temp
         // deal a card to current user
         disablePlayButtons();
         await delay(HIT_TIME);
@@ -312,9 +311,25 @@ async function newRound() {
     // - reset hands
     // - remove popup
     // - deal cards to dealer and players
+    await initialDeal();
+
     // - checkgamestatus (if any players or dealers have bust)
     // - enable play buttons
     enablePlayButtons();
+}
+
+async function initialDeal() {
+    if (currentUser.uid === hostUid) {
+        for (let i = 0; i < 2; i++) {
+            await delay(1000);
+            await dealCard(dealer);
+        }
+    }
+
+    for (let i = 0; i < 2; i++) {
+        await delay(HIT_TIME);
+        await dealCard(player);
+    }
 }
 
 function delay(time) {
