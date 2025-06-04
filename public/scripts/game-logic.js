@@ -133,6 +133,9 @@ const HIT_TIME = 250;
 let deck;
 const players = [];
 
+let hasCreatedFirestoreDoc = false; 
+let playerChipCount = 0;     
+
 const hitButton = document.querySelector("#hit-btn");
 const standButton = document.querySelector("#stand-btn");
 
@@ -240,19 +243,49 @@ function checkGameStatus() {
 }
 
 function checkWinner() {
+    const currentUser = firebase.auth().currentUser;
+    const uid = currentUser ? currentUser.uid : null;
+    const db = firebase.firestore();
+
     const dealerTotal = players[0].total;
     const playerTotal = players[1].total;
 
-    if (dealerTotal > 21) {
-        roundEndPopup("Dealer Bust");
-    } else if (dealerTotal > playerTotal) {
+    // adjust chip count
+    // –1 on dealer win, +1 on player win
+    if (dealerTotal > playerTotal && dealerTotal <= 21) {
+        playerChipCount -= 1;
+    } else if (dealerTotal < playerTotal || dealerTotal > 21) {
+        playerChipCount += 1;
+    }
+
+    if (uid) {
+        const lastPlayedTimestamp = firebase.firestore.FieldValue.serverTimestamp();
+        if (!hasCreatedFirestoreDoc) {
+            // create doc 
+            db.collection("users").doc(uid).set({
+                name: currentUser.displayName || "Unknown Player",
+                chips: playerChipCount,
+                lastPlayed: lastPlayedTimestamp
+            }, { merge: true });
+            hasCreatedFirestoreDoc = true;
+        } else {
+            // update existing doc
+            db.collection("users").doc(uid).update({
+                chips: playerChipCount,
+                lastPlayed: lastPlayedTimestamp
+            });
+        }
+    }
+
+    if (dealerTotal > playerTotal && dealerTotal <= 21) {
         roundEndPopup("Dealer Win");
-    } else if (dealerTotal < playerTotal) {
+    } else if (dealerTotal < playerTotal || dealerTotal > 21) {
         roundEndPopup("Player Win");
     } else {
         roundEndPopup("Push");
     }
 }
+
 
 function makeCardElement(number, suit) {
     // create elements & assign classes
