@@ -1,46 +1,123 @@
-/* green background */
 body {
-    background-color: #0A845D;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-  }
-  
-  /* center the table  */
-  .leaderboard-main {
-    display: flex;
-    justify-content: center;
-    padding-top: 40px;
-  }
-  
-  /* style the table */
-  .leaderboard-table {
-    border-collapse: collapse;
-    width: 80%;
-    max-width: 600px;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  
-  .leaderboard-table th,
-  .leaderboard-table td {
-    padding: 12px;
-    text-align: left;
-    font-size: 18px;
-  }
-  
-  .leaderboard-table thead {
-    background-color: #4B2991;
-    color: white;
-  }
-  
-  .leaderboard-table tbody tr:nth-child(even) {
-    background-color: #F2F2F2;
-  }
-  
-  .leaderboard-table tbody tr:nth-child(odd) {
-    background-color: white;
-  }
-  
+  margin: 0;
+  padding: 0;
+  background-color: #0A845D;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.leaderboard-topbar {
+  background-color: #075737;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-topbar .wordmark--small {
+  width: 150px;
+}
+
+.leaderboard-topbar .navigation__sign-in {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.leaderboard-topbar .navigation__profile-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.leaderboard-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.leaderboard-card {
+  background-color: white;
+  border-radius: 13px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 650px;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.leaderboard-card__title {
+  font-size: 32px;
+  margin: 0 0 20px 0;
+  color: #333;
+  align-self: center;
+}
+
+.leaderboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.leaderboard-dropdown-group {
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-dropdown {
+  font-size: 16px;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+}
+
+.leaderboard-refresh-group {
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-refresh-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.leaderboard-refresh-btn:hover {
+  color: #000;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+}
+
+.leaderboard-table th {
+  border-bottom: 2px solid #ddd;
+}
+
+.leaderboard-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.no-users {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+}
