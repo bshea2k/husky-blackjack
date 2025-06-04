@@ -276,15 +276,11 @@ async function initializeSync() {
             playerRef.onSnapshot((snapshot) => {
                 const data = snapshot.data();
                 const cardsData = data.cards;
-                console.log(`Snapshot for ${data.uid} activated`); //temp
 
-                //multiplayer-hand__cards multiplayer-hand__cards--TDzPsEXkkAZxPQ2r8m7Wf7htvYg1
                 const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
-                console.log(`multiplayer-hand__cards--${data.uid}`); //temp
                 const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
 
                 if (cardsData.length > 0) {
-                    console.log("Made it to appending"); //temp
                     const cardWords = cardsData[cardsData.length - 1].split(" ");
                     const cardElement = makeCardElement(cardWords[0], cardWords[1]);
                     
@@ -293,6 +289,26 @@ async function initializeSync() {
                 }
             })
         })
+    })
+
+    dealerDoc.onSnapshot(doc => {
+        const data = doc.data;
+        const cardsData = data.cards;
+
+        const cardZone = document.querySelector(`.dealer-hand`);
+        const scoreCounter = document.querySelector(`.dealer-score`);
+
+        if (cardsData.length > 0) {
+            const cardWords = cardsData[cardsData.length - 1].split(" ");
+            const cardElement = makeCardElement(cardWords[0], cardWords[1]);
+            
+            if (cardsData.length === 1) {
+                cardElement.classList.add("card--hidden");
+            }        
+
+            cardZone.appendChild(cardElement);
+            scoreCounter.textContent = data.hiddenScore;
+        }
     })
 }
 
