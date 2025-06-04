@@ -27,17 +27,15 @@ class Deck {
 class Player {
     constructor(cardZone, scoreCounter) {
         this.hand = [];
-        this.cardZone = document.querySelector(`${cardZone}`);
-        this.scoreCounter = document.querySelector(`${scoreCounter}`)
     }
 
     hit(card) {
         this.hand.push(card);
-        
-        const cardElement = makeCardElement(card.value, card.suit.toLowerCase());
-        this.cardZone.appendChild(cardElement);
 
-        this.scoreCounter.textContent = this.total;
+        currentUserDoc.update({
+            cards: firebase.firestore.FieldValue.arrayUnion(`${card.value} ${card.suit}`),
+            score: this.total
+        });
     }
 
     get total() {
@@ -131,7 +129,7 @@ class Dealer extends Player {
 
 const HIT_TIME = 250;
 let deck;
-const players = [];
+let player;
 
 const app = firebase.app();
 const db = firebase.firestore();
@@ -176,7 +174,7 @@ async function domLoaded() {
     })
 
     // set up syncing
-    initializeSync();
+    await initializeSync();
 
     // set up play buttons
     initializePlayButtons();
@@ -192,9 +190,17 @@ async function initializeRoomData() {
     roomDoc = roomQuery.docs[0].ref;
     playersRef = roomDoc.collection("players");
 
-    firebase.auth().onAuthStateChanged((user) => {
+    await firebase.auth().onAuthStateChanged((user) => {
         currentUser = user;
     })
+
+    player = new Player(`#multiplayer-hand__cards--${currentUser.uid}`, `#multiplayer-hand__score--${currentUser.uid}`);
+}
+
+async function dealCard(user) {
+    const card = await deck.drawCard();
+
+    user.hit(card)
 }
 
 function openRestrictedPopup() {
@@ -206,6 +212,9 @@ function initializePlayButtons() {
     hitButton.addEventListener("click", async () => {
         console.log("Hit") //temp
         // deal a card to current user
+        disablePlayButtons();
+        await delay(HIT_TIME);
+        await dealCard(player);
         // check to see if they have bust
         // - if bust, end their turn
         // - if not bust, nothing
@@ -236,8 +245,33 @@ async function initializePlayers() {
     await currentUserDoc.update({ready: false});
 }
 
-function initializeSync() {
+async function initializeSync() {
+    // attach a snapshot listener for each user, updates their zones when their record gets update
+    playersRef.get().then((docs) => {
+        docs.forEach((doc) => {
+            const playerRef = doc.ref;
 
+            playerRef.onSnapshot((snapshot) => {
+                const data = snapshot.data();
+                const cardsData = data.cards;
+                console.log(`Snapshot for ${data.uid} activated`); //temp
+
+                //multiplayer-hand__cards multiplayer-hand__cards--TDzPsEXkkAZxPQ2r8m7Wf7htvYg1
+                const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
+                console.log(`multiplayer-hand__cards--${data.uid}`); //temp
+                const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
+
+                if (cardsData.length > 0) {
+                    console.log("Made it to appending"); //temp
+                    const cardWords = cardsData[cardsData.length - 1].split(" ");
+                    const cardElement = makeCardElement(cardWords[0], cardWords[1]);
+                    
+                    cardZone.appendChild(cardElement);
+                    scoreCounter.textContent = data.score;
+                }
+            })
+        })
+    })
 }
 
 async function newRound() {
@@ -246,6 +280,7 @@ async function newRound() {
     // - deal cards to dealer and players
     // - checkgamestatus (if any players or dealers have bust)
     // - enable play buttons
+    enablePlayButtons();
 }
 
 function delay(time) {
