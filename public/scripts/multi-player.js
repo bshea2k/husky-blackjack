@@ -197,6 +197,8 @@ async function newRound() {
     await resetHands();
 
     // - remove popup
+    const popup = document.querySelector(".multiplayer-round-over");
+    popup.classList.add("multiplayer-round-over--hidden");
 
     // - deal cards to dealer and players
     await initialDeal();
@@ -364,7 +366,7 @@ async function initializeSync() {
             const hiddenCard = cardZone.firstChild;
             hiddenCard.classList.remove("card--hidden");
 
-            // display screen
+            roundEndPopup();
 
             setTimeout(async () => {
                 await newRound();
@@ -511,4 +513,10 @@ function makeCardElement(number, suit) {
     cardBlock.appendChild(cardBottomSection);
 
     return cardBlock;
+}
+
+function roundEndPopup() {
+    const popup = document.querySelector(".multiplayer-round-over");
+
+    popup.classList.remove(".multiplayer-round-over--hidden");
 }
