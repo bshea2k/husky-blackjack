@@ -84,16 +84,12 @@ class Dealer extends Player {
 
     hit(card) {
         this.hand.push(card);
-        
-        const cardElement = makeCardElement(card.value, card.suit.toLowerCase());
 
-        if (this.hand.length == 1) {
-            cardElement.classList.add("card--hidden");
-        }
-
-        this.cardZone.appendChild(cardElement);
-
-        this.scoreCounter.textContent = this.hiddenTotal + "?";
+        dealerDoc.update({
+            cards: firebase.firestore.FieldValue.arrayUnion(`${card.value} ${card.suit.toLowerCase()}`),
+            score: this.total,
+            hiddenScore: this.hiddenTotal
+        });
     }
 
     get hiddenTotal() {
