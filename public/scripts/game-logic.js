@@ -251,12 +251,12 @@ function checkWinner() {
     const playerTotal = players[1].total;
 
     // adjust chip count
-    // –1 on dealer win, +1 on player win
     if (dealerTotal > playerTotal && dealerTotal <= 21) {
-        playerChipCount -= 1;
+        playerChipCount = Math.max(0, playerChipCount - 1);
     } else if (dealerTotal < playerTotal || dealerTotal > 21) {
         playerChipCount += 1;
     }
+    
 
     if (uid) {
         const lastPlayedTimestamp = firebase.firestore.FieldValue.serverTimestamp();
