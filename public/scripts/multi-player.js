@@ -167,7 +167,7 @@ async function domLoaded() {
 
     //initialize deck
     deck = await new Deck().init();
-    gamesRef.update({decKid: deck.deckId});
+    roomDoc.update({deckId: deck.deckId});
 
     // set up play buttons
     initializePlayButtons();
@@ -178,14 +178,10 @@ async function domLoaded() {
 
 async function initializeRoomData() {
     gamesRef = db.collection("games");
-    const roomQuery = gamesRef.where("roomCode", "==", roomCode);
+    const roomQuery = await gamesRef.where("roomCode", "==", roomCode).get();
 
-    await roomQuery.get().then((querySnapshot) => {
-        let roomDoc = querySnapshot.docs[0];
-        const roomRef = roomDoc.ref;
-        roomDoc = gamesRef.doc(roomDoc.id);
-        playersRef = roomRef.collection("players");
-    });
+    roomDoc = roomQuery.docs[0].ref;
+    playersRef = roomDoc.collection("players");
 
     firebase.auth().onAuthStateChanged((user) => {
         currentUser = user;
@@ -223,16 +219,12 @@ async function initializePlayers() {
             })
         });
     
-    currentUserDoc = playersRef.where("uid", "==", currentUser.uid)
-        .then(docs => {
-            docs.forEach(doc => {
-                currentUserDoc = doc;
-            })
-        });
+    const currentUserQuery = await playersRef.where("uid", "==", currentUser.uid).get();
+    currentUserDoc = currentUserQuery.docs[0].ref;
 
-    currentUserDoc.update({cards: []});
-    currentUserDoc.update({score: 0});
-    currentUserDoc.update({ready: false});
+    await currentUserDoc.update({cards: []});
+    await currentUserDoc.update({score: 0});
+    await currentUserDoc.update({ready: false});
 }
 
 async function newRound() {
