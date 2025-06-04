@@ -413,6 +413,38 @@ async function dealerDraw() {
     }
 
     roomDoc.update({dealerTurnOver: true});
+    
+    const roomSnapshot = await roomDoc.get();
+    const dealerScore = roomSnapshot.data().dealerScore;
+
+    const playersSnapshot = await playersRef.get();
+    playersSnapshot.forEach(async (playerDocSnap) => {
+        const pData = playerDocSnap.data();
+        const uid = pData.uid;
+        const displayName = pData.displayName;
+        const playerScore = pData.score;
+
+        const userRef = db.collection("users").doc(uid);
+        const userSnap = await userRef.get();
+        let oldChips = 0;
+        if (userSnap.exists && userSnap.data().chips != null) {
+            oldChips = userSnap.data().chips;
+        }
+
+        let newChips = oldChips;
+        if (playerScore > dealerScore || dealerScore > 21) {
+            newChips = oldChips + 1;
+        } else if (playerScore < dealerScore && dealerScore <= 21) {
+            newChips = oldChips - 1;
+        }
+
+        await userRef.set({
+            name: displayName,
+            chips: newChips,
+            lastPlayed: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    });
+
 }
 
 async function resetHands() {
