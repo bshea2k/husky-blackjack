@@ -69,8 +69,6 @@ class Player {
 
     clearHand() {
         this.hand.length = 0;
-        this.cardZone.innerHTML = "";
-        this.scoreCounter.textContent = 0;
     }
 }
 
@@ -182,6 +180,19 @@ async function domLoaded() {
     await newRound();
 }
 
+async function newRound() {
+    // - reset hands
+    await resetHands();
+
+    // - remove popup
+    // - deal cards to dealer and players
+    await initialDeal();
+
+    // - checkgamestatus (if any players or dealers have bust)
+    // - enable play buttons
+    enablePlayButtons();
+}
+
 async function initializeRoomData() {
     gamesRef = db.collection("games");
     const roomQuery = await gamesRef.where("roomCode", "==", roomCode).get();
@@ -246,7 +257,7 @@ async function initializePlayers() {
 
     await currentUserDoc.update({cards: []});
     await currentUserDoc.update({score: 0});
-    await currentUserDoc.update({ready: false});
+    await currentUserDoc.update({turnOver: false});
 }
 
 async function initializeDealer() {
@@ -306,17 +317,6 @@ async function initializeSync() {
     })
 }
 
-async function newRound() {
-    // - reset hands
-    // - remove popup
-    // - deal cards to dealer and players
-    await initialDeal();
-
-    // - checkgamestatus (if any players or dealers have bust)
-    // - enable play buttons
-    enablePlayButtons();
-}
-
 async function initialDeal() {
     if (currentUser.uid === hostUid) {
         for (let i = 0; i < 2; i++) {
@@ -329,6 +329,23 @@ async function initialDeal() {
         await delay(HIT_TIME);
         await dealCard(player);
     }
+}
+
+async function resetHands() {
+    await playersRef.get()
+        .then(players => {
+            players.forEach(doc => {
+                data = doc.data();
+
+                const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
+                const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
+
+                cardZone.innerHtml = "";
+                scoreCounter.textContent = 0;
+            })
+        });
+
+    player.clearHand();
 }
 
 function delay(time) {
