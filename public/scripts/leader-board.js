@@ -1,6 +1,12 @@
 
 window.addEventListener("DOMContentLoaded", initLeaderboard);
 
+document.getElementById('refresh-btn')
+  .addEventListener('click', initLeaderboard);
+
+document.getElementById('time-range')
+  .addEventListener('change', initLeaderboard);
+
 async function initLeaderboard() {
   const tbody = document.getElementById("leaderboard-body");
   const db = firebase.firestore();
@@ -43,3 +49,4 @@ async function initLeaderboard() {
     tbody.innerHTML = "<tr><td colspan='3'>Error loading data</td></tr>";
   }
 }
+document.getElementById("refresh-btn").addEventListener("click", initLeaderboard);
