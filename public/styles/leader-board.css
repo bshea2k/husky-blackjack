@@ -1,18 +1,30 @@
+:root {
+  --green-table: #0A845D;
+  --green-topbar: #075737;
+  --uw-purple: #4B2E83;
+  --uw-gold: #B9975B;
+  --gray-text: #333333;
+  --gray-light: #DDDDDD;
+  --gray-offwhite: #F9F9F9;
+  --hover-row: #FFF8E1;
+}
+
 body {
   margin: 0;
   padding: 0;
-  background-color: #0A845D;
-  font-family: sans-serif;
+  background-color: var(--green-table);
+  font-family: "Segoe UI", system-ui, sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 .leaderboard-topbar {
-  background-color: #075737;
+  background-color: var(--green-topbar);
   padding: 10px 20px;
   display: flex;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .leaderboard-topbar .wordmark--small {
@@ -37,32 +49,34 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding: 40px 20px;
 }
 
 .leaderboard-card {
   background-color: white;
   border-radius: 13px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 650px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 700px;
   padding: 30px 40px;
   display: flex;
   flex-direction: column;
 }
 
 .leaderboard-card__title {
-  font-size: 32px;
+  font-size: 36px;
+  font-weight: 600;
   margin: 0 0 20px 0;
-  color: #333;
-  align-self: center;
+  color: var(--uw-purple);
+  text-align: center;
+  letter-spacing: 1px;
 }
 
 .leaderboard-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 0 0 15px 0;
 }
 
 .leaderboard-dropdown-group {
@@ -72,9 +86,22 @@ body {
 
 .leaderboard-dropdown {
   font-size: 16px;
-  padding: 6px;
+  padding: 6px 10px;
   border-radius: 5px;
-  border: 1px solid #aaa;
+  border: 2px solid var(--uw-purple);
+  background-color: white;
+  color: var(--gray-text);
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.leaderboard-dropdown:hover {
+  border-color: var(--uw-gold);
+}
+
+.leaderboard-dropdown:focus {
+  border-color: var(--uw-purple);
+  box-shadow: 0 0 0 3px rgba(181, 149, 91, 0.3);
 }
 
 .leaderboard-refresh-group {
@@ -85,39 +112,65 @@ body {
 .leaderboard-refresh-btn {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 22px;
   cursor: pointer;
-  color: #333;
-  transition: color 0.2s;
+  color: var(--uw-purple);
+  transition: color 0.2s, transform 0.2s;
 }
 
 .leaderboard-refresh-btn:hover {
-  color: #000;
+  color: var(--uw-gold);
+  transform: rotate(18deg);
 }
 
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-.leaderboard-table th,
-.leaderboard-table td {
-  padding: 12px 10px;
-  text-align: left;
-  font-size: 18px;
-  color: #333;
+  table-layout: fixed;
 }
 
 .leaderboard-table th {
-  border-bottom: 2px solid #ddd;
+  padding: 10px 8px;
+  text-align: left;
+  font-size: 18px;
+  color: white;
+  background-color: var(--uw-purple);
+  border-bottom: 2px solid var(--uw-gold);
+}
+
+.leaderboard-table td {
+  padding: 8px 8px;
+  text-align: left;
+  font-size: 16px;
+  color: var(--gray-text);
+  border-bottom: 1px solid var(--gray-light);
 }
 
 .leaderboard-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: var(--gray-offwhite);
+}
+
+.leaderboard-table tr:hover {
+  background-color: var(--hover-row);
 }
 
 .no-users {
   text-align: center;
   font-style: italic;
-  color: #666;
+  color: #666666;
+  padding: 12px 0;
+}
+
+@media (max-width: 500px) {
+  .leaderboard-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .leaderboard-dropdown,
+  .leaderboard-refresh-btn {
+    width: 100%;
+  }
+  .leaderboard-refresh-btn {
+    text-align: right;
+  }
 }
