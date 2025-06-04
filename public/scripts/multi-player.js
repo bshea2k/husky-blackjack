@@ -175,6 +175,9 @@ async function domLoaded() {
         }
     })
 
+    // set up syncing
+    initializeSync();
+
     // set up play buttons
     initializePlayButtons();
 
@@ -231,6 +234,10 @@ async function initializePlayers() {
     await currentUserDoc.update({cards: []});
     await currentUserDoc.update({score: 0});
     await currentUserDoc.update({ready: false});
+}
+
+function initializeSync() {
+
 }
 
 async function newRound() {
@@ -292,4 +299,54 @@ function makeMultiplayerHand(uid, displayName, profileUrl) {
     // return
 
     return multiplayerHand;
+}
+
+function makeCardElement(number, suit) {
+    // create elements & assign classes
+    const cardBlock = document.createElement("div");
+    cardBlock.classList.add("card");
+    cardBlock.classList.add(`card--${suit}`);
+
+    const cardTopSection = document.createElement("div");
+    cardTopSection.classList.add("card__top-section");
+
+    const cardBottomSection = document.createElement("div");
+    cardBottomSection.classList.add("card__bottom-section");
+
+    const topNumber = document.createElement("span");
+    topNumber.classList.add("card__number");
+
+    const topSuit = document.createElement("span");
+    topSuit.classList.add("card__suit");
+
+    const bottomNumber = document.createElement("span");
+    bottomNumber.classList.add("card__number");
+
+    const bottomSuit = document.createElement("span");
+    bottomSuit.classList.add("card__suit");
+
+    // add content to elements
+    let suitCode;
+
+    if (suit === "hearts") suitCode = "&hearts;";
+    else if (suit === "diamonds") suitCode = "&diams;";
+    else if (suit === "clubs") suitCode = "&clubs;";
+    else suitCode = "&#9824;";
+
+    topNumber.textContent = number.slice(0, 1);
+    if (number == 10) topNumber.textContent = 10;
+    topSuit.innerHTML = suitCode;
+    bottomNumber.textContent = number.slice(0, 1);
+    if (number == 10) bottomNumber.textContent = 10;
+    bottomSuit.innerHTML = suitCode;
+
+    // append elements
+    cardTopSection.appendChild(topNumber);
+    cardTopSection.appendChild(topSuit);
+    cardBottomSection.appendChild(bottomNumber);
+    cardBottomSection.appendChild(bottomSuit);
+    cardBlock.appendChild(cardTopSection);
+    cardBlock.appendChild(cardBottomSection);
+
+    return cardBlock;
 }
