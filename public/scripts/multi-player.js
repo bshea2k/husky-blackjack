@@ -353,27 +353,23 @@ async function initializeSync() {
 
         const cardZone = document.querySelector(`#dealer-hand`);
         const scoreCounter = document.querySelector(`#dealer-score`);
-
-        if (cardsData.length > 0 && data.dealerTurnOver === false && data.allPlayersTurnOver === false) {
-            const cardWords = cardsData[cardsData.length - 1].split(" ");
-            const cardElement = makeCardElement(cardWords[0], cardWords[1]);
-
-            if (cardsData.length === 1) {
-                cardElement.classList.add("card--hidden");
-            }        
-
-            cardZone.appendChild(cardElement);
-            scoreCounter.textContent = data.dealerHiddenScore;
+        
+        while (cardZone.firstElementChild) {
+            cardZone.removeChild(cardZone.firstElementChild);
         }
 
-        
-        if (cardsData.length > 0 && data.dealerTurnOver === false && data.allPlayersTurnOver === true) {
-            const cardWords = cardsData[cardsData.length - 1].split(" ");
-            const cardElement = makeCardElement(cardWords[0], cardWords[1]);
+        cardsData.forEach((cardStr, index) => {
+            const [value, suit] = cardStr.split(" ");
+            const cardElement = makeCardElement(value, suit);
+
+            if (index === 0 && data.dealerTurnOver === false) {
+                cardElement.classList.add("card--hidden");
+            }
 
             cardZone.appendChild(cardElement);
-            scoreCounter.textContent = data.dealerScore;
-        } 
+        });
+
+        scoreCounter.textContent = data.dealerHiddenScore;
 
         if (data.dealerTurnOver === true) {
             disablePlayButtons();
