@@ -166,7 +166,7 @@ async function domLoaded() {
     if (hostUid === currentUser.uid) {
         deck = await new Deck().init();
         roomDoc.update({deckId: deck.deckId});
-        currentUserDoc.update({allPlayersTurnOver: false});
+        roomDoc.update({allPlayersTurnOver: false});
     }
     deck = new Deck(deck.deckId);
 
@@ -178,8 +178,8 @@ async function domLoaded() {
 
     // set up snapshot to see when game is over
     if (currentUser.uid === hostUid) {
-        setInterval(() => {
-            if (checkAllTurnsOver() === true) {
+        setInterval(async () => {
+            if (await checkAllTurnsOver() === true) {
                 roomDoc.update({allPlayersTurnOver: true});
             }
         }, 3000);
@@ -257,8 +257,7 @@ function initializePlayButtons() {
 async function checkAllTurnsOver() {
     let allTurnsOver = true;
 
-    if (hostUid = currentUser.uid) {
-        playersRef.get()
+    await playersRef.get()
         .then(players => {
             players.forEach(doc => {
                 data = doc.data();
@@ -268,7 +267,6 @@ async function checkAllTurnsOver() {
                 }
             })
         });
-    }
 
     return allTurnsOver;
 }
@@ -345,7 +343,7 @@ async function initializeSync() {
         const cardZone = document.querySelector(`#dealer-hand`);
         const scoreCounter = document.querySelector(`#dealer-score`);
 
-        if (cardsData.length > 0 && data.dealerTurnOver === false) {
+        if (cardsData.length > 0 && data.dealerTurnOver === false && data.allPlayersTurnOver === false) {
             const cardWords = cardsData[cardsData.length - 1].split(" ");
             const cardElement = makeCardElement(cardWords[0], cardWords[1]);
             
