@@ -33,7 +33,7 @@ class Player {
         this.hand.push(card);
 
         currentUserDoc.update({
-            cards: firebase.firestore.FieldValue.arrayUnion(`${card.value} ${card.suit}`),
+            cards: firebase.firestore.FieldValue.arrayUnion(`${card.value} ${card.suit.toLowerCase()}`),
             score: this.total
         });
     }
@@ -217,7 +217,8 @@ function initializePlayButtons() {
         await dealCard(player);
         // check to see if they have bust
         // - if bust, end their turn
-        // - if not bust, nothing
+        // - if not bust, enable buttons
+        enablePlayButtons();
     });
 
     standButton.addEventListener("click", async () => {
