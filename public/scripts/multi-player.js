@@ -130,10 +130,12 @@ class Dealer extends Player {
 const HIT_TIME = 250;
 let deck;
 let player;
+let dealer;
 
 const app = firebase.app();
 const db = firebase.firestore();
 const url = new URLSearchParams(window.location.search);
+let hostUid;
 
 const roomCode = url.get("room-code");
 let currentUser;
@@ -141,6 +143,7 @@ let gamesRef;
 let roomDoc;
 let playersRef;
 let currentUserDoc;
+let dealerDoc;
 
 const hitButton = document.querySelector("#hit-btn");
 const standButton = document.querySelector("#stand-btn");
@@ -163,15 +166,15 @@ async function domLoaded() {
     // set up players
     await initializePlayers();
 
-    //initialize deck (only host sets deck)
-    roomDoc.get().then(async doc => {
-        const data = doc.data();
+    // set up dealer & firestore
+    await initializeDealer();
 
-        if (data.hostUid === currentUser.uid) {
-            deck = await new Deck().init();
-            roomDoc.update({deckId: deck.deckId});
-        }
-    })
+    //initialize deck (only host sets deck)
+    if (hostUid === currentUser.uid) {
+        deck = await new Deck().init();
+        roomDoc.update({deckId: deck.deckId});
+    }
+    deck = new Deck(deck.deckId);
 
     // set up syncing
     await initializeSync();
@@ -195,6 +198,11 @@ async function initializeRoomData() {
     })
 
     player = new Player(`#multiplayer-hand__cards--${currentUser.uid}`, `#multiplayer-hand__score--${currentUser.uid}`);
+
+    roomDoc.get().then(async doc => {
+        const data = doc.data();
+        hostUid = data.hostUid;
+    })
 }
 
 async function dealCard(user) {
@@ -244,6 +252,19 @@ async function initializePlayers() {
     await currentUserDoc.update({cards: []});
     await currentUserDoc.update({score: 0});
     await currentUserDoc.update({ready: false});
+}
+
+async function initializeDealer() {
+    if (currentUser.uid === hostUid) {
+        dealer = new Dealer();
+
+        dealerDoc = roomDoc.collection("dealer").doc("dealer");
+        dealerDoc.set({
+            cards: [],
+            score: 0,
+            hiddenScore: 0
+        });
+    }
 }
 
 async function initializeSync() {
