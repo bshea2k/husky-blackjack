@@ -144,7 +144,6 @@ const standButton = document.querySelector("#stand-btn");
 document.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {
-    console.log(roomCode); //temp
     await initializeRoomData();
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -201,6 +200,8 @@ async function newRound() {
     // - reset hands
     await resetHands();
 
+    roomDoc.update({allPlayersTurnOver: false});
+
     // - remove popup
     const popup = document.querySelector(".multiplayer-round-over");
     popup.classList.add("multiplayer-round-over--hidden");
@@ -251,7 +252,7 @@ function initializePlayButtons() {
         await delay(HIT_TIME);
         await dealCard(player);
         // check to see if they have bust
-        if (player.total > 21) {
+        if (player.total >= 21) {
             currentUserDoc.update({turnOver: true});
         } else {
             enablePlayButtons();
@@ -259,8 +260,8 @@ function initializePlayButtons() {
     });
 
     standButton.addEventListener("click", async () => {
-        console.log("Stand") //temp
-        // go to next users turn
+        currentUserDoc.update({turnOver: true});
+        disablePlayButtons();
     });
 }
 
@@ -356,7 +357,7 @@ async function initializeSync() {
         if (cardsData.length > 0 && data.dealerTurnOver === false && data.allPlayersTurnOver === false) {
             const cardWords = cardsData[cardsData.length - 1].split(" ");
             const cardElement = makeCardElement(cardWords[0], cardWords[1]);
-            
+
             if (cardsData.length === 1) {
                 cardElement.classList.add("card--hidden");
             }        
@@ -364,6 +365,15 @@ async function initializeSync() {
             cardZone.appendChild(cardElement);
             scoreCounter.textContent = data.dealerHiddenScore;
         }
+
+        
+        if (cardsData.length > 0 && data.dealerTurnOver === false && data.allPlayersTurnOver === true) {
+            const cardWords = cardsData[cardsData.length - 1].split(" ");
+            const cardElement = makeCardElement(cardWords[0], cardWords[1]);
+
+            cardZone.appendChild(cardElement);
+            scoreCounter.textContent = data.dealerScore;
+        } 
 
         if (data.dealerTurnOver === true) {
             disablePlayButtons();
@@ -385,6 +395,11 @@ async function initialDeal() {
         for (let i = 0; i < 2; i++) {
             await delay(1000);
             await dealCard(dealer);
+        }
+
+        if (player.total === 21) {
+            currentUserDoc.update({turnOver: true});
+            disablePlayButtons();
         }
 
         if (dealer.total === 21) {
@@ -414,7 +429,7 @@ async function resetHands() {
                 players.forEach(doc => {
                     data = doc.data();
                     
-                    doc.update({
+                    doc.ref.update({
                         cards: [],
                         score: 0,
                         turnOver: false
@@ -423,17 +438,28 @@ async function resetHands() {
                     const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
                     const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
 
-                    cardZone.innerHtml = "";
+                    while (cardZone.firstElementChild) {
+                        cardZone.removeChild(cardZone.firstElementChild);
+                    }
                     scoreCounter.textContent = 0;
                 })
             });
         
+        const cardZone = document.querySelector(`#dealer-hand`);
+        const scoreCounter = document.querySelector(`#dealer-score`);
+        while (cardZone.firstElementChild) {
+            cardZone.removeChild(cardZone.firstElementChild);
+        }
+        scoreCounter.textContent = 0;
+
         roomDoc.update({
             dealerCards: [],
             dealerHiddenScore: 0,
             dealerScore: 0,
-            dealerTurnOver: false;
+            dealerTurnOver: false
         });
+
+        dealer.clearHand();
     }
 
     player.clearHand();
@@ -545,5 +571,7 @@ function makeCardElement(number, suit) {
 function roundEndPopup() {
     const popup = document.querySelector(".multiplayer-round-over");
 
-    popup.classList.remove(".multiplayer-round-over--hidden");
+    popup.classList.remove("multiplayer-round-over--hidden");
+
+    console.log(popup);
 }
