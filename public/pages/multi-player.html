@@ -28,19 +28,19 @@
     </header>
   <div class="game-dealer-area">
     <p class="game-score-label">Dealer: <span id="dealer-score">0</span></p>
-    <div class="game-card-row" id="dealer-hand">  <!-- Possible place for Deck of Cards API-->
+    <div class="game-card-row" id="dealer-hand"> 
     </div>
   </div>
 
 
   <div class="game-controls">
-    <button class="game-btn" id="hit-btn">
+    <button class="game-btn game-btn--disabled" id="hit-btn" disabled>
       Hit <img src="../images/hit-btn-icon.png" alt="paw icon" class="btn-icon" />
     </button>
-    <button class="game-btn" id="double-btn">
+    <button class="game-btn game-btn--disabled" id="double-btn" disabled>
       Double <img src="../images/double-btn-icon.png" alt="coin icon" class="btn-icon" />
     </button>
-    <button class="game-btn" id="stand-btn">
+    <button class="game-btn game-btn--disabled" id="stand-btn" disabled>
       Stand <img src="../images/stand-btn-icon.png" alt="up arrow icon" class="btn-icon" />
     </button>
   </div>
@@ -54,6 +54,13 @@
       <h2 class="multiplayer-restricted__header">Multiplayer Restricted</h2>
       <p class="multiplayer-restricted__message">You must be signed in to play</p>
       <a href="../index.html" class="multiplayer-restricted__redirect"><button class="button button--small" id="home-btn">Home</button></a>
+    </div>
+  </div>
+
+  <div class="multiplayer-round-over multiplayer-round-over--hidden">
+    <div class="multiplayer-round-over__content">
+      <h2 class="multiplayer-round-over__header">Round over</h2>
+      <p class="multiplayer-round-over__message">Going to next round...</p>
     </div>
   </div>
 </body>
