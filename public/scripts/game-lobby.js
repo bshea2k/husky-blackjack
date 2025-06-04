@@ -11,38 +11,67 @@ function domLoaded() {
     const gameRef = db.collection("games").doc(roomId);
 
      // update the UI in real-time, in case a player joins, leaves, etc.
-     gameRef.onSnapshot(function (doc) {
-        if (doc.exists) {
-            displayLobbyInfo(doc.data());
-            displayPlayers(db, roomId);
-        } else {
+     gameRef.onSnapshot(doc => {
+        if (!doc.exists) {
             alert("Game not found.");
+            return;
+        }
+    
+        const data = doc.data();
+        displayLobbyInfo(data);
+        displayPlayers(db, roomId);
+        
+        const user = firebase.auth().currentUser;
+        // start game button disabled for non-host users
+        if (user && user.uid !== data.hostUid) {
+            startBtn.disabled = true;
+            startBtn.classList.add("button--disabled");
+            
+            // redirect users if game starts
+            if (data.status === "started") {
+                const roomCode = data.roomCode;
+                const targetUrl = `multi-player.html?room-code=${encodeURIComponent(roomCode)}`;
+                window.location.href = targetUrl;
+            }
         }
     });
 
     // game starts if host clicks start button
     const startBtn = document.getElementById("game-lobby-start");
-    startBtn.addEventListener("click", () => {
-        gameRef.update({status: "started"});
-    })
+    startBtn.addEventListener("click", async () => {
+        try {
+            const user = firebase.auth().currentUser;
+            console.log("Clicked by UID:", user?.uid);
+            const playersSnapshot = await gameRef.collection("players").get();
+            const lobbySnapshot = await gameRef.get();
+            const playerLimit = lobbySnapshot.data().players;
+
+            // if amount of players in lobby don't match to what was selected at creation
+            // alert the user
+            if (playersSnapshot.size < playerLimit) {
+                alert(`You need ${playerLimit} players to start. Current player count: ${playersSnapshot.size}`);
+                return;
+            }
+
+            // update status in firestore to started
+            await gameRef.update({ status: "started" });
+            console.log("Firestore update complete");
+    
+            // get the updated document
+            const updatedDoc = await gameRef.get();
+            const roomCode = updatedDoc.data().roomCode;
+            
+            // redirect after everything is confirmed
+            const targetUrl = `multi-player.html?room-code=${encodeURIComponent(roomCode)}`;
+            window.location.href = targetUrl;
+            
+        } catch (err) {
+            console.error("Update failed:", err);
+        }
+    });
 
     // start game button disabled for non-host users, and redirect users if game starts
-    gameRef.onSnapshot(doc => {
-        const data = doc.data();
-        const user = firebase.auth().currentUser;
 
-        if (user.uid != data.hostUid) {
-            startBtn.disabled = true;
-            startBtn.classList.add("button--disabled");
-        }
-
-        if (data.status === "started") {
-            const roomCode = data.roomCode;
-            const targetUrl = `multi-player.html?room-code=${encodeURIComponent(roomCode)}`;
-
-            window.location.href = targetUrl;
-        }
-    })
 
     // leaving a lobby
     const leaveBtn = document.getElementById("game-lobby-leave");

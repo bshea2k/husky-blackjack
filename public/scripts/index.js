@@ -42,37 +42,48 @@ function closeMultiplayerPopup() {
 
 function handleJoinForm(event) {
     event.preventDefault();
-  
+
     const roomCode = document.getElementById("room-code").value.trim().toUpperCase();
-  
+
     if (!roomCode) {
-      alert("Please enter a room code.");
-      return;
+        alert("Please enter a room code.");
+        return;
     }
-  
+
     const db = firebase.firestore();
     const auth = firebase.auth();
-  
+
     // search for a game in the db with matching roomcode
     db.collection("games").where("roomCode", "==", roomCode).get()
-      .then(function (querySnapshot) {
-        if (querySnapshot.empty) {
-          alert("Room not found. Please check your code.");
-          return;
-        }
-  
-        // get the first match
-        const gameDoc = querySnapshot.docs[0];
-        const gameId = gameDoc.id;
+        .then(async function (querySnapshot) {
+            if (querySnapshot.empty) {
+                alert("Room not found. Please check your code.");
+                return;
+            }
 
-        // ensure the user is authenticated
-        const user = auth.currentUser;
-        if (!user) {
-            alert("You must be logged in to join a game.");
-            return;
-        }
-        // write player into the database
-        const playerRef = db.collection("games").doc(gameId).collection("players").doc(user.uid);
+            // get the first match
+            const gameDoc = querySnapshot.docs[0];
+            const gameId = gameDoc.id;
+            const gameData = gameDoc.data();
+            
+            // ensure the user is authenticated
+            const user = auth.currentUser;
+            if (!user) {
+                alert("You must be logged in to join a game.");
+                return;
+            }
+            // reference to playerlist
+            const playersRef = db.collection("games").doc(gameId).collection("players");
+            const currentPlayersSnapshot = await playersRef.get();
+
+            // check if the lobby is already full
+            if (currentPlayersSnapshot.size >= gameData.players) {
+                alert("This game lobby is already full.");
+                return;
+            }
+
+            // write player into the database
+            const playerRef = playersRef.doc(user.uid);
 
             return playerRef.set({
                 displayName: user.displayName || "Player",
@@ -84,9 +95,8 @@ function handleJoinForm(event) {
                 window.location.href = `./pages/game-lobby.html?room=${gameId}`;
             });
         })
-
-      .catch(function (error) {
-        console.error("Error checking room code:", error);
-        alert("Something went wrong while joining the room.");
-      });
-  }
+        .catch(function (error) {
+            console.error("Error checking room code:", error);
+            alert("Something went wrong while joining the room.");
+        });
+}
