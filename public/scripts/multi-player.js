@@ -368,7 +368,7 @@ async function initializeSync() {
         if (data.dealerTurnOver === true) {
             disablePlayButtons();
             scoreCounter.textContent = data.dealerScore;
-            const hiddenCard = cardZone.firstChild;
+            const hiddenCard = cardZone.firstElementChild;
             hiddenCard.classList.remove("card--hidden");
 
             roundEndPopup();
@@ -413,6 +413,12 @@ async function resetHands() {
             .then(players => {
                 players.forEach(doc => {
                     data = doc.data();
+                    
+                    doc.update({
+                        cards: [],
+                        score: 0,
+                        turnOver: false
+                    });
 
                     const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
                     const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
@@ -421,6 +427,13 @@ async function resetHands() {
                     scoreCounter.textContent = 0;
                 })
             });
+        
+        roomDoc.update({
+            dealerCards: [],
+            dealerHiddenScore: 0,
+            dealerScore: 0,
+            dealerTurnOver: false;
+        });
     }
 
     player.clearHand();
