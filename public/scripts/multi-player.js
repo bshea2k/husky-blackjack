@@ -165,10 +165,13 @@ async function domLoaded() {
     //initialize deck (only host sets deck)
     if (hostUid === currentUser.uid) {
         deck = await new Deck().init();
-        roomDoc.update({deckId: deck.deckId});
-        roomDoc.update({allPlayersTurnOver: false});
+        await roomDoc.update({deckId: deck.deckId});
+        await roomDoc.update({allPlayersTurnOver: false});
     }
-    deck = new Deck(deck.deckId);
+    roomDoc.get().then(doc => {
+        deck = doc.data().deckId;
+    })
+    deck = new Deck(deck);
 
     // set up syncing
     await initializeSync();
@@ -360,6 +363,12 @@ async function initializeSync() {
             scoreCounter.textContent = data.dealerScore;
             const hiddenCard = cardZone.firstChild;
             hiddenCard.classList.remove("card--hidden");
+
+            // display screen
+
+            setTimeout(async () => {
+                await newRound();
+            }, 7500)
         }
     })
 }
@@ -383,18 +392,20 @@ async function initialDeal() {
 }
 
 async function resetHands() {
-    await playersRef.get()
-        .then(players => {
-            players.forEach(doc => {
-                data = doc.data();
+    if (hostUid === currentUser.uid) {
+        await playersRef.get()
+            .then(players => {
+                players.forEach(doc => {
+                    data = doc.data();
 
-                const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
-                const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
+                    const cardZone = document.querySelector(`.multiplayer-hand__cards--${data.uid}`);
+                    const scoreCounter = document.querySelector(`.multiplayer-hand__score--${data.uid}`);
 
-                cardZone.innerHtml = "";
-                scoreCounter.textContent = 0;
-            })
-        });
+                    cardZone.innerHtml = "";
+                    scoreCounter.textContent = 0;
+                })
+            });
+    }
 
     player.clearHand();
 }
