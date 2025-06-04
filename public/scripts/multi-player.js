@@ -185,10 +185,12 @@ async function newRound() {
     await resetHands();
 
     // - remove popup
+
     // - deal cards to dealer and players
     await initialDeal();
 
     // - checkgamestatus (if any players or dealers have bust)
+
     // - enable play buttons
     enablePlayButtons();
 }
@@ -267,14 +269,15 @@ async function initializeDealer() {
         await roomDoc.update({
             dealerCards: [],
             dealerScore: 0,
-            dealerHiddenScore: 0
+            dealerHiddenScore: 0,
+            dealerTurnOver: false
         })
     }
 }
 
 async function initializeSync() {
     // attach a snapshot listener for each user, updates their zones when their record gets update
-    playersRef.get().then((docs) => {
+    await playersRef.get().then((docs) => {
         docs.forEach((doc) => {
             const playerRef = doc.ref;
 
@@ -296,14 +299,14 @@ async function initializeSync() {
         })
     })
 
-    roomDoc.onSnapshot(doc => {
+    await roomDoc.onSnapshot(doc => {
         const data = doc.data();
         const cardsData = data.dealerCards;
 
         const cardZone = document.querySelector(`#dealer-hand`);
         const scoreCounter = document.querySelector(`#dealer-score`);
 
-        if (cardsData.length > 0) {
+        if (cardsData.length > 0 && data.dealerTurnOver === false) {
             const cardWords = cardsData[cardsData.length - 1].split(" ");
             const cardElement = makeCardElement(cardWords[0], cardWords[1]);
             
@@ -313,6 +316,13 @@ async function initializeSync() {
 
             cardZone.appendChild(cardElement);
             scoreCounter.textContent = data.dealerHiddenScore;
+        }
+
+        if (data.dealerTurnOver === true) {
+            disablePlayButtons();
+            scoreCounter.textContent = data.dealerScore;
+            const hiddenCard = cardZone.firstChild;
+            hiddenCard.classList.remove("card--hidden");
         }
     })
 }
