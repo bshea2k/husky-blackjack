@@ -1,3 +1,7 @@
+/*
+Purpose: multi-player.js implements the logic of multiplayer mode. Like game-logic.js
+It uses the Deck of Cards API to aid in gameplay.
+*/
 class Deck {
     constructor(deckId) {
         this.deckId = deckId;

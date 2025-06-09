@@ -1,4 +1,7 @@
-
+/*
+Purpose: leader-board.js implements leader-board.html. It does not do real-time updates,
+as a user must click the refresh button every time they want to see an updated view.
+*/
 window.addEventListener("DOMContentLoaded", initLeaderboard);
 
 document.getElementById('refresh-btn')

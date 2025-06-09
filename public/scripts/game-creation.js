@@ -1,3 +1,7 @@
+/*
+Purpose: game-creation.js implements the functionality of game-creation.html
+It uses both Firebase's Authentication and Database service.
+*/
 window.addEventListener("DOMContentLoaded", domLoaded);
 
 function domLoaded() {

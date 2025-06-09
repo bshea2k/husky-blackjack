@@ -1,3 +1,7 @@
+/*
+Purpose: game-logic.js implements the logic of singleplayer mode. It uses the Deck
+of Cards API for actions related to playing cards (ex: shuffle, drawing a card, etc.)
+*/
 class Deck {
     constructor(deckId) {
         this.deckId = deckId;

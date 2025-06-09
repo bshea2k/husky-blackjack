@@ -1,4 +1,6 @@
-/* game creation header */
+/*
+Purpose: game-creation.css styles game-creation.html and game-lobby.html
+*/
 .game-creation-header {
     display: flex;
     flex-direction: column;

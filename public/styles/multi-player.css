@@ -1,4 +1,6 @@
-  
+ /*
+Purpose: multi-player.css styles multi-player.html
+*/ 
 .multi-player-header {
     display: flex;
     flex-direction: column;

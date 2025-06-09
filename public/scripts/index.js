@@ -1,5 +1,7 @@
-// TO DO
-// - Accessibility: add a tooltip when users hover over a disabled button saying to login to access this feature
+/*
+Purpose: index.js provides functionality of index.html (which is the home screen).
+Specifically, it implements the following buttons: Singleplayer, Multiplayer, Create Private Room
+*/
 
 const multiplayerButton = document.querySelector("#multiplayer-btn");
 const privateButton = document.querySelector("#private-btn");

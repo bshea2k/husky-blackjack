@@ -1,4 +1,6 @@
-  
+/*
+Purpose: single-player.css styles single-player.html
+*/ 
 .single-player-header {
     display: flex;
     flex-direction: column;

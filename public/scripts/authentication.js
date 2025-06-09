@@ -1,3 +1,8 @@
+/*
+Purpose: authentication.js uses Firebase's Authentication service so that users
+can log in with their Google account. Once a user signs in the default profile icon
+changes to their Google account's photo.
+*/
 window.addEventListener("DOMContentLoaded", domLoaded);
 
 async function domLoaded() {

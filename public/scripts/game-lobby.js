@@ -1,3 +1,9 @@
+/*
+Purpose: game-lobby.js implements the functionality of game-lobby.html
+It uses both Firebase's Authentication and Database service.
+The notable feature is that it uses Firestore's onSnapshot for real-time updates,
+as player's UI updates whenever people join or leave a lobby.
+*/
 window.addEventListener("DOMContentLoaded", domLoaded);
 
 function domLoaded() {
